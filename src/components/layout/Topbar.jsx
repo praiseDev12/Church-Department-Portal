@@ -14,7 +14,7 @@ export default function Topbar() {
           {user?.departmentName ?? 'Department'}
         </p>
       </div>
-      <div className='flex items-center gap-3 lg:gap-10'>
+      <div className='flex items-center gap-5 lg:gap-10'>
         <button
           onClick={toggleTheme}
           aria-label='Toggle color theme'

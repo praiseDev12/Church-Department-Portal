@@ -1,17 +1,47 @@
 import { apiFetch } from '../lib/api.js';
 
-export async function getMembers({ search = '', status = '' } = {}) {
+export function getMembers({ search = '' } = {}) {
   const params = new URLSearchParams();
 
   if (search.trim()) {
     params.set('search', search.trim());
   }
 
-  if (status) {
-    params.set('status', status);
-  }
-
   const query = params.toString();
 
-  return apiFetch(`/dashboard/members${query ? `?${query}` : ''}`);
+  return apiFetch(`/members${query ? `?${query}` : ''}`);
+}
+
+export function getMember(memberId) {
+  return apiFetch(`/members/${memberId}`);
+}
+
+export function updateMember(memberId, data) {
+  return apiFetch(`/members/${memberId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export function changeMemberStatus(memberId, status) {
+  return apiFetch(`/members/${memberId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+}
+
+export function changeMemberUnit(memberId, unitId, note = '') {
+  return apiFetch(`/members/${memberId}/unit`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      unitId,
+      note,
+    }),
+  });
+}
+
+export function deleteMember(memberId) {
+  return apiFetch(`/members/${memberId}`, {
+    method: 'DELETE',
+  });
 }

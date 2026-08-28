@@ -28,6 +28,18 @@
   @apply flex items-center justify-center;
 }
 
+@utility abs-vertical {
+  @apply top-1/2 -translate-y-1/2;
+}
+
+@utility abs-horizontal {
+  @apply left-1/2 -translate-x-1/2;
+}
+
+@utility abs-center {
+  @apply left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
 @layer base {
   html {
     font-family: var(--font-sans);

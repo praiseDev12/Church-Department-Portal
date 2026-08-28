@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react';
 
 import Card from '../components/ui/Card.jsx';
 import Button from '../components/ui/Button.jsx';
-import { getMembers } from '../services/memberService.js';
+import EditMemberModal from '../components/members/EditMemberModal.jsx';
+import ChangeUnitModal from '../components/members/ChangeUnitModal.jsx';
+import ConfirmDialog from '../components/members/ConfirmDialog.jsx';
+
+import {
+  getMembers,
+  changeMemberStatus,
+  deleteMember,
+} from '../services/memberService.js';
 
 import {
   User,
@@ -72,7 +80,7 @@ function ActionsMenu({
   };
 
   return (
-    <div className='absolute'>
+    <div className='absolute -mt-4'>
       <button
         type='button'
         onClick={(e) => {
@@ -649,7 +657,7 @@ function MemberRow({
         </td>
 
         {/* Status */}
-        <td className='hidden lg:block px-2 py-4 sm:px-3'>
+        <td className='hidden my-2 lg:block px-2 py-4 sm:px-3'>
           <StatusBadge status={member.status} />
         </td>
 
@@ -684,21 +692,14 @@ export default function Members() {
   const [error, setError] = useState('');
   const [expandedMemberId, setExpandedMemberId] = useState(null);
 
-  const handleEdit = (member) => {
-    console.log('Edit member:', member);
-  };
-
-  const handleChangeUnit = (member) => {
-    console.log('Change unit:', member);
-  };
-
-  const handleChangeStatus = (member) => {
-    console.log('Change status:', member);
-  };
-
-  const handleDelete = (member) => {
-    console.log('Delete member:', member);
-  };
+  // Which action is in progress, and any error from performing one —
+  // kept separate from the list-load `error` above so a failed action
+  // shows a small banner instead of replacing the whole table.
+  const [editingMember, setEditingMember] = useState(null);
+  const [unitChangeMember, setUnitChangeMember] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [actionError, setActionError] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -737,6 +738,60 @@ export default function Members() {
     setExpandedMemberId((current) => (current === memberId ? null : memberId));
   };
 
+  function patchMember(updatedMember) {
+    setMembers((current) =>
+      current.map((m) => (m._id === updatedMember._id ? updatedMember : m)),
+    );
+  }
+
+  function handleEdit(member) {
+    setActionError('');
+    setEditingMember(member);
+  }
+
+  function handleChangeUnit(member) {
+    setActionError('');
+    setUnitChangeMember(member);
+  }
+
+  async function handleChangeStatus(member) {
+    setActionError('');
+    const nextStatus = member.status === 'active' ? 'inactive' : 'active';
+    try {
+      const data = await changeMemberStatus(member._id, nextStatus);
+      patchMember(data.member);
+    } catch (err) {
+      setActionError(err.message || 'Could not update member status.');
+    }
+  }
+
+  function handleDeleteRequest(member) {
+    setActionError('');
+    setDeleteTarget(member);
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    setDeleteLoading(true);
+    try {
+      await deleteMember(deleteTarget._id);
+      setMembers((current) =>
+        current.filter((m) => m._id !== deleteTarget._id),
+      );
+      setDeleteTarget(null);
+    } catch (err) {
+      setActionError(err.message || 'Could not delete member.');
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
+
+  function handleMemberSaved(updatedMember) {
+    patchMember(updatedMember);
+    setEditingMember(null);
+    setUnitChangeMember(null);
+  }
+
   return (
     <div className='flex min-w-0 flex-col gap-4'>
       {/* Page header */}
@@ -751,13 +806,13 @@ export default function Members() {
           </p>
         </div>
 
-        <div className='flex w-full gap-2 sm:w-auto'>
+        {/* <div className='flex w-full gap-2 sm:w-auto'>
           <Button variant='secondary' className='flex-1 sm:flex-none'>
             Import CSV
           </Button>
 
           <Button className='flex-1 sm:flex-none'>Add member</Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Search */}
@@ -770,6 +825,12 @@ export default function Members() {
           className='w-full max-w-sm rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-zinc-700 dark:bg-zinc-800'
         />
       </div>
+
+      {actionError && (
+        <div className='rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-400'>
+          {actionError}
+        </div>
+      )}
 
       {/* Members table */}
       <Card className='w-full min-w-0 overflow-hidden border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900'>
@@ -827,7 +888,7 @@ export default function Members() {
                       onEdit={() => handleEdit(member)}
                       onChangeUnit={() => handleChangeUnit(member)}
                       onChangeStatus={() => handleChangeStatus(member)}
-                      onDelete={() => handleDelete(member)}
+                      onDelete={() => handleDeleteRequest(member)}
                     />
                   );
                 })}
@@ -836,6 +897,37 @@ export default function Members() {
           </div>
         )}
       </Card>
+
+      {editingMember && (
+        <EditMemberModal
+          member={editingMember}
+          onClose={() => setEditingMember(null)}
+          onSaved={handleMemberSaved}
+        />
+      )}
+
+      {unitChangeMember && (
+        <ChangeUnitModal
+          member={unitChangeMember}
+          onClose={() => setUnitChangeMember(null)}
+          onSaved={handleMemberSaved}
+        />
+      )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title='Delete member'
+        message={
+          deleteTarget
+            ? `Remove ${deleteTarget.fullName} from your department? This can't be undone.`
+            : ''
+        }
+        confirmLabel='Delete'
+        danger
+        loading={deleteLoading}
+        onConfirm={confirmDelete}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
