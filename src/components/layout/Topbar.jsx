@@ -28,7 +28,7 @@ export default function Topbar() {
         </button>
         <div className='text-right'>
           <p className='text-xs lg:text-sm font-medium text-brand dark:text-brand-200'>
-            {user?.name}
+            {user?.fullName}
           </p>
           <p className='text-[10px] lg:text-xs text-zinc-500 dark:text-zinc-400'>
             {user?.role === 'main_admin' ? 'Main Admin' : 'Unit Admin'}

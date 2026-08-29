@@ -12,10 +12,10 @@ export default function ConfirmDialog({
   onClose,
 }) {
   return (
-    <Modal open={open} onClose={onClose} title={title} maxWidth='max-w-sm'>
-      <p className='text-sm text-zinc-600 dark:text-zinc-300'>{message}</p>
-      <div className='mt-5 flex justify-end gap-2'>
-        <Button variant='secondary' onClick={onClose} disabled={loading}>
+    <Modal open={open} onClose={onClose} title={title} maxWidth="max-w-sm">
+      <p className="text-sm text-zinc-600 dark:text-zinc-300">{message}</p>
+      <div className="mt-5 flex justify-end gap-2">
+        <Button variant="secondary" onClick={onClose} disabled={loading}>
           Cancel
         </Button>
         <Button

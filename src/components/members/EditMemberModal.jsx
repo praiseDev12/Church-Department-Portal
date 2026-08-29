@@ -3,11 +3,14 @@ import Button from '../ui/Button.jsx';
 import FormInput from '../ui/FormInput.jsx';
 import FormSelect from '../ui/FormSelect.jsx';
 import Modal from '../ui/Modal.jsx';
+import PhotoUpload from './PhotoUpload.jsx';
 import { updateMember } from '../../services/memberService.js';
 
 const genderOptions = [
   { value: 'female', label: 'Female' },
   { value: 'male', label: 'Male' },
+  { value: 'other', label: 'Other' },
+  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
 ];
 
 const maritalStatusOptions = [
@@ -25,7 +28,8 @@ function toDateInputValue(value) {
   return date.toISOString().slice(0, 10);
 }
 
-export default function EditMemberModal({ member, onClose, onSaved }) {
+export default function EditMemberModal({ member, onClose, onSaved, onPhotoChanged = () => {} }) {
+  const [photoUrl, setPhotoUrl] = useState(member.photoUrl || '');
   const [form, setForm] = useState({
     fullName: member.fullName || '',
     dateOfBirth: toDateInputValue(member.dateOfBirth),
@@ -67,32 +71,42 @@ export default function EditMemberModal({ member, onClose, onSaved }) {
   }
 
   return (
-    <Modal open onClose={onClose} title='Edit member' maxWidth='max-w-lg'>
+    <Modal open onClose={onClose} title="Edit member" maxWidth="max-w-lg">
       <form
         onSubmit={handleSubmit}
-        className='scrollbar-thin scrollbar-track-transparent scrollbar-thumb-brand dark:scrollbar-thumb-zinc-800 flex max-h-[70vh] flex-col gap-4 overflow-y-auto pr-1'
+        className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto pr-1"
       >
+        <PhotoUpload
+          memberId={member._id}
+          currentPhotoUrl={photoUrl}
+          name={member.fullName}
+          onUploaded={(updated) => {
+            setPhotoUrl(updated.photoUrl);
+            onPhotoChanged(updated);
+          }}
+        />
+
         <FormInput
-          id='fullName'
-          label='Full name'
-          type='text'
+          id="fullName"
+          label="Full name"
+          type="text"
           required
           value={form.fullName}
           onChange={handleChange('fullName')}
         />
 
-        <div className='grid grid-cols-2 gap-4'>
+        <div className="grid grid-cols-2 gap-4">
           <FormInput
-            id='dateOfBirth'
-            label='Date of birth'
-            type='date'
+            id="dateOfBirth"
+            label="Date of birth"
+            type="date"
             value={form.dateOfBirth}
             onChange={handleChange('dateOfBirth')}
           />
           <FormSelect
-            id='gender'
-            label='Gender'
-            placeholder='Select'
+            id="gender"
+            label="Gender"
+            placeholder="Select"
             options={genderOptions}
             value={form.gender}
             onChange={handleChange('gender')}
@@ -100,81 +114,81 @@ export default function EditMemberModal({ member, onClose, onSaved }) {
         </div>
 
         <FormSelect
-          id='maritalStatus'
-          label='Marital status'
-          placeholder='Select'
+          id="maritalStatus"
+          label="Marital status"
+          placeholder="Select"
           options={maritalStatusOptions}
           value={form.maritalStatus}
           onChange={handleChange('maritalStatus')}
         />
 
-        <div className='grid grid-cols-2 gap-4'>
+        <div className="grid grid-cols-2 gap-4">
           <FormInput
-            id='phoneNumber'
-            label='Phone number'
-            type='tel'
+            id="phoneNumber"
+            label="Phone number"
+            type="tel"
             value={form.phoneNumber}
             onChange={handleChange('phoneNumber')}
           />
           <FormInput
-            id='whatsappNumber'
-            label='WhatsApp number'
-            type='tel'
+            id="whatsappNumber"
+            label="WhatsApp number"
+            type="tel"
             value={form.whatsappNumber}
             onChange={handleChange('whatsappNumber')}
           />
         </div>
 
         <FormInput
-          id='email'
-          label='Email'
-          type='email'
+          id="email"
+          label="Email"
+          type="email"
           value={form.email}
           onChange={handleChange('email')}
         />
 
         <FormInput
-          id='address'
-          label='Address'
-          type='text'
+          id="address"
+          label="Address"
+          type="text"
           value={form.address}
           onChange={handleChange('address')}
         />
 
-        <div className='grid grid-cols-2 gap-4'>
+        <div className="grid grid-cols-2 gap-4">
           <FormInput
-            id='occupation'
-            label='Occupation'
-            type='text'
+            id="occupation"
+            label="Occupation"
+            type="text"
             value={form.occupation}
             onChange={handleChange('occupation')}
           />
           <FormInput
-            id='roleInUnit'
-            label='Role in unit'
-            type='text'
+            id="roleInUnit"
+            label="Role in unit"
+            type="text"
             value={form.roleInUnit}
             onChange={handleChange('roleInUnit')}
           />
         </div>
 
         <FormInput
-          id='dateJoinedDepartment'
-          label='Date joined'
-          type='date'
+          id="dateJoinedDepartment"
+          label="Date joined"
+          type="date"
           value={form.dateJoinedDepartment}
           onChange={handleChange('dateJoinedDepartment')}
         />
 
         {error && (
-          <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         )}
 
-        <div className='flex justify-end gap-2 pt-2'>
-          <Button type='button' variant='secondary' onClick={onClose}>
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button type='submit' disabled={saving}>
+          <Button type="submit" disabled={saving}>
             {saving ? 'Saving…' : 'Save changes'}
           </Button>
         </div>

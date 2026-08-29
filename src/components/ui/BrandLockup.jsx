@@ -3,12 +3,12 @@ import { logo } from '../../assets/index.js';
 export default function BrandLockup({ variant = 'dark' }) {
   const nameClass =
     variant === 'dark'
-      ? 'text-brand-400 text-xs lg:text-lg font-bold'
-      : 'text-brand-500 dark:text-brand-400 text-xs lg:text-lg font-bold';
+      ? 'text-brand-400 text-[10px] lg:text-xs font-bold'
+      : 'text-brand-500 dark:text-brand-400 text-[10px] lg:text-xs font-bold';
   const subtitleClass =
     variant === 'dark'
-      ? 'relative font-display text-[7px] lg:text-sm font-semibold text-white lg:-mt-1.5'
-      : 'relative font-display text-[7px] lg:text-sm font-semibold lg:-mt-1.5';
+      ? 'relative font-display text-[7px] lg:text-[10px] font-semibold text-white lg:-mt-1'
+      : 'relative font-display text-[7px] lg:text-[10px] font-semibold lg:-mt-1';
 
   const locationClass =
     variant === 'dark'

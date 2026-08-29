@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 
+import { useAuth } from '../context/AuthContext.jsx';
 import Card from '../components/ui/Card.jsx';
 import Button from '../components/ui/Button.jsx';
 import EditMemberModal from '../components/members/EditMemberModal.jsx';
 import ChangeUnitModal from '../components/members/ChangeUnitModal.jsx';
 import ConfirmDialog from '../components/members/ConfirmDialog.jsx';
+import RoleModal from '../components/members/RoleModal.jsx';
 
 import {
   getMembers,
@@ -28,6 +30,7 @@ import {
   Mail,
   Copy,
   Trash2,
+  UserCog,
 } from 'lucide-react';
 
 function formatWhatsAppNumber(number) {
@@ -51,7 +54,9 @@ function ActionsMenu({
   onEdit,
   onChangeUnit,
   onChangeStatus,
+  onChangeRole,
   onDelete,
+  showRoleAction,
 }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -80,7 +85,7 @@ function ActionsMenu({
   };
 
   return (
-    <div className='absolute -mt-4'>
+    <div className='absolute'>
       <button
         type='button'
         onClick={(e) => {
@@ -145,6 +150,19 @@ function ActionsMenu({
                 {member.status === 'active' ? 'Mark inactive' : 'Mark active'}
               </span>
             </button>
+
+            {/* Change role — main admins only */}
+            {showRoleAction && (
+              <button
+                type='button'
+                onClick={() => handleAction(onChangeRole)}
+                className='flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-800'
+              >
+                <UserCog size={16} className='shrink-0 text-zinc-400' />
+
+                <span>Change role</span>
+              </button>
+            )}
 
             <div className='my-1 border-t border-zinc-100 dark:border-zinc-800' />
 
@@ -558,7 +576,9 @@ function MemberRow({
   onEdit,
   onChangeUnit,
   onChangeStatus,
+  onChangeRole,
   onDelete,
+  showRoleAction,
 }) {
   const initials = member.fullName
     ?.split(' ')
@@ -657,7 +677,7 @@ function MemberRow({
         </td>
 
         {/* Status */}
-        <td className='hidden my-2 lg:block px-2 py-4 sm:px-3'>
+        <td className='hidden lg:block px-2 py-4 sm:px-3'>
           <StatusBadge status={member.status} />
         </td>
 
@@ -668,7 +688,9 @@ function MemberRow({
             onEdit={onEdit}
             onChangeUnit={onChangeUnit}
             onChangeStatus={onChangeStatus}
+            onChangeRole={onChangeRole}
             onDelete={onDelete}
+            showRoleAction={showRoleAction}
           />
         </td>
       </tr>
@@ -686,6 +708,7 @@ function MemberRow({
 }
 
 export default function Members() {
+  const { isMainAdmin } = useAuth();
   const [search, setSearch] = useState('');
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -697,6 +720,7 @@ export default function Members() {
   // shows a small banner instead of replacing the whole table.
   const [editingMember, setEditingMember] = useState(null);
   const [unitChangeMember, setUnitChangeMember] = useState(null);
+  const [roleChangeMember, setRoleChangeMember] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [actionError, setActionError] = useState('');
@@ -754,6 +778,11 @@ export default function Members() {
     setUnitChangeMember(member);
   }
 
+  function handleChangeRole(member) {
+    setActionError('');
+    setRoleChangeMember(member);
+  }
+
   async function handleChangeStatus(member) {
     setActionError('');
     const nextStatus = member.status === 'active' ? 'inactive' : 'active';
@@ -790,6 +819,7 @@ export default function Members() {
     patchMember(updatedMember);
     setEditingMember(null);
     setUnitChangeMember(null);
+    setRoleChangeMember(null);
   }
 
   return (
@@ -806,13 +836,13 @@ export default function Members() {
           </p>
         </div>
 
-        {/* <div className='flex w-full gap-2 sm:w-auto'>
+        <div className='flex w-full gap-2 sm:w-auto'>
           <Button variant='secondary' className='flex-1 sm:flex-none'>
             Import CSV
           </Button>
 
           <Button className='flex-1 sm:flex-none'>Add member</Button>
-        </div> */}
+        </div>
       </div>
 
       {/* Search */}
@@ -888,7 +918,9 @@ export default function Members() {
                       onEdit={() => handleEdit(member)}
                       onChangeUnit={() => handleChangeUnit(member)}
                       onChangeStatus={() => handleChangeStatus(member)}
+                      onChangeRole={() => handleChangeRole(member)}
                       onDelete={() => handleDeleteRequest(member)}
+                      showRoleAction={isMainAdmin}
                     />
                   );
                 })}
@@ -902,6 +934,15 @@ export default function Members() {
         <EditMemberModal
           member={editingMember}
           onClose={() => setEditingMember(null)}
+          onSaved={handleMemberSaved}
+          onPhotoChanged={patchMember}
+        />
+      )}
+
+      {roleChangeMember && (
+        <RoleModal
+          member={roleChangeMember}
+          onClose={() => setRoleChangeMember(null)}
           onSaved={handleMemberSaved}
         />
       )}

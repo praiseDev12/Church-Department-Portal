@@ -267,6 +267,8 @@ function DeleteUnitForm({ unit, onSubmit, onCancel, loading, error }) {
 function UnitCard({ unit, isMainAdmin, onEdit, onDelete }) {
   const [open, setOpen] = useState(false);
 
+  console.log(unit);
+
   const admins = unit.adminUsers || unit.admins || [];
   const memberCount = Number(unit.memberCount || 0);
 
@@ -359,7 +361,7 @@ function UnitCard({ unit, isMainAdmin, onEdit, onDelete }) {
                     key={admin._id || admin.id}
                     className='truncate text-sm font-medium text-zinc-700 dark:text-zinc-300'
                   >
-                    {admin.name || admin.email}
+                    {admin.fullName || admin.email}
                   </p>
                 ))}
               </div>

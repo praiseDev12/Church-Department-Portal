@@ -40,7 +40,7 @@ export default function Dashboard() {
     <div className='flex flex-col gap-6 dark:text-white'>
       <div>
         <h1 className='font-display text-2xl font-semibold'>
-          Welcome{user?.name ? `, ${user.name}` : ''}
+          Welcome{user?.fullName ? `, ${user.fullName}` : ''}
         </h1>
         <p className='text-sm text-zinc-500 dark:text-zinc-400'>
           Here's what's happening in your{' '}

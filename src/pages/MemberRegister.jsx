@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { useMemberAuth } from '../context/MemberAuthContext.jsx';
-import { memberApiFetch } from '../lib/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
+import { apiFetch } from '../lib/api.js';
 import Button from '../components/ui/Button.jsx';
 import FormInput from '../components/ui/FormInput.jsx';
 import FormSelect from '../components/ui/FormSelect.jsx';
@@ -39,7 +39,7 @@ const initialForm = {
 };
 
 export default function MemberRegister() {
-  const { login } = useMemberAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState(initialForm);
@@ -50,7 +50,7 @@ export default function MemberRegister() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    memberApiFetch('/public/departments')
+    apiFetch('/public/departments')
       .then((data) => setDepartments(data.departments))
       .catch(() =>
         setError('Could not load departments. Refresh and try again.'),
@@ -62,7 +62,7 @@ export default function MemberRegister() {
       setUnits([]);
       return;
     }
-    memberApiFetch(`/public/departments/${form.department}/units`)
+    apiFetch(`/public/departments/${form.department}/units`)
       .then((data) => setUnits(data.units))
       .catch(() => setError('Could not load units for that department.'));
   }, [form.department]);
@@ -90,7 +90,7 @@ export default function MemberRegister() {
 
     setLoading(true);
     try {
-      const data = await memberApiFetch('/member-auth/register', {
+      const data = await apiFetch('/auth/register', {
         method: 'POST',
         body: JSON.stringify({ ...form, consentAccepted }),
       });
@@ -311,13 +311,13 @@ export default function MemberRegister() {
           <p className='mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400'>
             Already registered?{' '}
             <Link
-              to='/member-login'
+              to='/login'
               className='font-medium text-brand-500 hover:underline dark:text-brand-300'
             >
               Sign in
             </Link>
           </p>
-          <DevelopedByCredit className='lg:hidden text-gray-400 text-xs text-center mt-10' />
+          <DevelopedByCredit className='text-gray-400 text-xs text-center mt-10' />
         </div>
       </div>
     </div>

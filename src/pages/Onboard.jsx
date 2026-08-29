@@ -5,14 +5,35 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { apiFetch } from '../lib/api.js';
 import Button from '../components/ui/Button.jsx';
 import FormInput from '../components/ui/FormInput.jsx';
+import FormSelect from '../components/ui/FormSelect.jsx';
 import BrandLockup from '../components/ui/BrandLockup.jsx';
 import DevelopedByCredit from '../components/ui/DevelopedByCredit.jsx';
+
+const genderOptions = [
+  { value: 'female', label: 'Female' },
+  { value: 'male', label: 'Male' },
+];
+
+const maritalStatusOptions = [
+  { value: 'single', label: 'Single' },
+  { value: 'married', label: 'Married' },
+  { value: 'widowed', label: 'Widowed' },
+  { value: 'divorced', label: 'Divorced' },
+  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+];
 
 const initialForm = {
   departmentName: '',
   unitName: '',
-  adminName: '',
+  fullName: '',
+  dateOfBirth: '',
+  gender: '',
+  maritalStatus: '',
+  phoneNumber: '',
+  whatsappNumber: '',
   email: '',
+  address: '',
+  occupation: '',
   password: '',
   setupCode: '',
 };
@@ -30,8 +51,9 @@ const whatYouGet = [
   },
   {
     icon: UserCircle,
-    title: 'Your admin account',
-    detail: 'Full access to members, attendance, and contributions.',
+    title: 'Your main admin account',
+    detail:
+      'You\u2019re a member too — full profile, plus full department access.',
   },
 ];
 
@@ -55,12 +77,7 @@ export default function Onboard() {
         method: 'POST',
         body: JSON.stringify(form),
       });
-      if (!data.success) {
-        throw new Error(
-          data.message || 'Something went wrong, please try again',
-        );
-      }
-      login(data); // saves { token, user }
+      login(data); // saves { token, user } — role is main_admin
       navigate('/', { replace: true });
     } catch (err) {
       setError(err.message || 'Something went wrong. Try again.');
@@ -123,11 +140,14 @@ export default function Onboard() {
             Set up your department
           </h1>
           <p className='mt-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
-            This creates your department, a first unit, and your main admin
-            account.
+            Creates your department, a first unit, and your own member profile
+            as main admin.
           </p>
 
           <form onSubmit={handleSubmit} className='mt-7 flex flex-col gap-4'>
+            <p className='text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500'>
+              Department
+            </p>
             <FormInput
               id='departmentName'
               label='Department name'
@@ -137,7 +157,6 @@ export default function Onboard() {
               value={form.departmentName}
               onChange={handleChange('departmentName')}
             />
-
             <FormInput
               id='unitName'
               label='First unit name'
@@ -148,14 +167,66 @@ export default function Onboard() {
               onChange={handleChange('unitName')}
             />
 
+            <p className='mt-2 text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500'>
+              Your details
+            </p>
             <FormInput
-              id='adminName'
-              label='Your name'
+              id='fullName'
+              label='Full name'
               type='text'
               required
-              value={form.adminName}
-              onChange={handleChange('adminName')}
+              value={form.fullName}
+              onChange={handleChange('fullName')}
             />
+
+            <div className='grid grid-cols-2 gap-4'>
+              <FormInput
+                id='dateOfBirth'
+                label='Date of birth'
+                type='date'
+                required
+                value={form.dateOfBirth}
+                onChange={handleChange('dateOfBirth')}
+              />
+              <FormSelect
+                id='gender'
+                label='Gender'
+                placeholder='Select'
+                options={genderOptions}
+                value={form.gender}
+                onChange={handleChange('gender')}
+                required
+              />
+            </div>
+
+            <FormSelect
+              id='maritalStatus'
+              label='Marital status'
+              placeholder='Select'
+              options={maritalStatusOptions}
+              value={form.maritalStatus}
+              onChange={handleChange('maritalStatus')}
+              required
+            />
+
+            <div className='grid grid-cols-2 gap-4'>
+              <FormInput
+                id='phoneNumber'
+                label='Phone number'
+                type='tel'
+                required
+                value={form.phoneNumber}
+                onChange={handleChange('phoneNumber')}
+              />
+              <FormInput
+                id='whatsappNumber'
+                label='WhatsApp number'
+                hint='(optional)'
+                type='tel'
+                value={form.whatsappNumber}
+                onChange={handleChange('whatsappNumber')}
+              />
+            </div>
 
             <FormInput
               id='email'
@@ -164,6 +235,24 @@ export default function Onboard() {
               required
               value={form.email}
               onChange={handleChange('email')}
+            />
+
+            <FormInput
+              id='address'
+              label='Address'
+              type='text'
+              required
+              value={form.address}
+              onChange={handleChange('address')}
+            />
+
+            <FormInput
+              id='occupation'
+              label='Occupation'
+              hint='(optional)'
+              type='text'
+              value={form.occupation}
+              onChange={handleChange('occupation')}
             />
 
             <FormInput
@@ -209,7 +298,7 @@ export default function Onboard() {
           <p className='mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400'>
             Already set up?{' '}
             <Link
-              to='/login-admin'
+              to='/login'
               className='font-medium text-brand-500 hover:underline dark:text-brand-300'
             >
               Sign in
@@ -217,12 +306,12 @@ export default function Onboard() {
           </p>
           <div className='flex items-center justify-center gap-x-4 mt-8 text-gray-400'>
             <hr className='w-full' />
-            <p className='text-xs text-nowrap'>Not an Admin?</p>
+            <p className='text-xs text-nowrap'>Not setting up a department?</p>
             <hr className='w-full' />
           </div>
-          <Link to='/member-login'>
+          <Link to='/register'>
             <button className='hover:text-brand-500 mt-3 w-full rounded-lg bg-transparent border px-4 py-2 border-brand-200 text-xs lg:text-sm text-gray-500'>
-              Member Login
+              Join as a member
             </button>
           </Link>
           <DevelopedByCredit className='lg:hidden text-gray-400 text-xs text-center mt-10' />
