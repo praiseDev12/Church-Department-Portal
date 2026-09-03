@@ -17,6 +17,7 @@ const navItems = [
   { to: '/', label: 'Dashboard', end: true },
   { to: '/members', label: 'Members' },
   { to: '/check-in', label: 'Check-In' },
+  { to: '/admin-checkin', label: 'Setup Check In', mainAdminOnly: true },
   { to: '/contributions', label: 'Contributions' },
   { to: '/reports', label: 'Reports' },
   { to: '/units', label: 'Units', mainAdminOnly: true },

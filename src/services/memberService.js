@@ -45,3 +45,14 @@ export function deleteMember(memberId) {
     method: 'DELETE',
   });
 }
+
+export function updateOwnProfile(data) {
+  return apiFetch('/members/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export function getOwnProfile() {
+  return apiFetch('/members/me');
+}

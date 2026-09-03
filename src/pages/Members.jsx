@@ -715,9 +715,6 @@ export default function Members() {
   const [error, setError] = useState('');
   const [expandedMemberId, setExpandedMemberId] = useState(null);
 
-  // Which action is in progress, and any error from performing one —
-  // kept separate from the list-load `error` above so a failed action
-  // shows a small banner instead of replacing the whole table.
   const [editingMember, setEditingMember] = useState(null);
   const [unitChangeMember, setUnitChangeMember] = useState(null);
   const [roleChangeMember, setRoleChangeMember] = useState(null);
