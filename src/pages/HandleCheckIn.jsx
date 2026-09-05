@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
+
 import Card from '../components/ui/Card.jsx';
 import Button from '../components/ui/Button.jsx';
 import Badge from '../components/ui/Badge.jsx';
 import Modal from '../components/ui/Modal.jsx';
 import FormInput from '../components/ui/FormInput.jsx';
 import FormSelect from '../components/ui/FormSelect.jsx';
-import { apiFetch } from '../lib/api.js';
-import axios from 'axios';
-import { backendUrl } from '../context/AuthContext.jsx';
+
 import {
+  activateService,
   createService,
   generateCheckInCode,
   getServices,
@@ -37,8 +37,8 @@ function formatTime(time) {
   if (!time) return '';
 
   const [hours, minutes] = time.split(':');
-  const date = new Date();
 
+  const date = new Date();
   date.setHours(Number(hours), Number(minutes), 0, 0);
 
   return date.toLocaleTimeString([], {
@@ -120,7 +120,6 @@ export default function HandleCheckIn() {
   const [sessionError, setSessionError] = useState('');
 
   const [generatingId, setGeneratingId] = useState(null);
-
   const [selectedSession, setSelectedSession] = useState(null);
 
   const [showServiceModal, setShowServiceModal] = useState(false);
@@ -131,58 +130,6 @@ export default function HandleCheckIn() {
   const [serviceError, setServiceError] = useState('');
 
   const [deletingId, setDeletingId] = useState(null);
-
-  async function loadServices() {
-    try {
-      setError('');
-
-      const data = await getServices();
-
-      setServices(data.services || []);
-    } catch (err) {
-      setError(err.message || 'Unable to load services.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function loadSessions() {
-    try {
-      setSessionError('');
-
-      const data = await getTodaySessions();
-
-      setSessions(data.sessions || []);
-    } catch (err) {
-      setSessionError(err.message || 'Unable to load today’s sessions.');
-    } finally {
-      setSessionLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadServices();
-    loadSessions();
-  }, []);
-
-  async function generateCode(serviceId) {
-    try {
-      setGeneratingId(serviceId);
-      setError('');
-
-      const data = await generateCheckInCode(serviceId);
-
-      const session = data.session;
-
-      setSelectedSession(session);
-
-      await loadSessions();
-    } catch (err) {
-      setError(err.message || 'Unable to generate check-in code.');
-    } finally {
-      setGeneratingId(null);
-    }
-  }
 
   function openCreateModal() {
     setEditingService(null);
@@ -214,6 +161,52 @@ export default function HandleCheckIn() {
         [field]: event.target.value,
       }));
     };
+  }
+
+  async function loadServices() {
+    try {
+      setError('');
+
+      const data = await getServices();
+
+      setServices(data.services || []);
+    } catch (err) {
+      setError(err.message || 'Unable to load services.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function loadSessions() {
+    try {
+      setSessionError('');
+
+      const data = await getTodaySessions();
+
+      setSessions(data.sessions || []);
+    } catch (err) {
+      setSessionError(err.message || 'Unable to load today’s sessions.');
+    } finally {
+      setSessionLoading(false);
+    }
+  }
+
+  async function generateCode(serviceId) {
+    try {
+      setGeneratingId(serviceId);
+      setError('');
+
+      const data = await generateCheckInCode(serviceId);
+      const session = data.session;
+
+      setSelectedSession(session);
+
+      await loadSessions();
+    } catch (err) {
+      setError(err.message || 'Unable to generate check-in code.');
+    } finally {
+      setGeneratingId(null);
+    }
   }
 
   async function saveService(event) {
@@ -260,7 +253,7 @@ export default function HandleCheckIn() {
 
   async function deleteService(service) {
     const confirmed = window.confirm(
-      `Delete "${service.name}"? This cannot be undone.`,
+      `Deactivate "${service.name}"? You can activate it again later.`,
     );
 
     if (!confirmed) return;
@@ -278,11 +271,36 @@ export default function HandleCheckIn() {
         setSelectedSession(null);
       }
     } catch (err) {
-      setError(err.message || 'Unable to delete service.');
+      setError(err.message || 'Unable to deactivate service.');
     } finally {
       setDeletingId(null);
     }
   }
+
+  async function activate(service) {
+    const confirmed = window.confirm(`Activate "${service.name}"?`);
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(service._id);
+      setError('');
+
+      await activateService(service._id);
+
+      await loadServices();
+      await loadSessions();
+    } catch (err) {
+      setError(err.message || 'Unable to activate service.');
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  useEffect(() => {
+    loadServices();
+    loadSessions();
+  }, []);
 
   return (
     <div className='flex flex-col gap-6'>
@@ -341,6 +359,7 @@ export default function HandleCheckIn() {
             <div className='grid grid-cols-1 gap-3 text-sm sm:grid-cols-3'>
               <div>
                 <p className='text-zinc-500 dark:text-zinc-400'>Opens</p>
+
                 <p className='font-medium text-zinc-900 dark:text-white'>
                   {formatDateTime(selectedSession.opensAt)}
                 </p>
@@ -350,6 +369,7 @@ export default function HandleCheckIn() {
                 <p className='text-zinc-500 dark:text-zinc-400'>
                   Scheduled start
                 </p>
+
                 <p className='font-medium text-zinc-900 dark:text-white'>
                   {formatDateTime(selectedSession.scheduledStart)}
                 </p>
@@ -357,6 +377,7 @@ export default function HandleCheckIn() {
 
               <div>
                 <p className='text-zinc-500 dark:text-zinc-400'>Closes</p>
+
                 <p className='font-medium text-zinc-900 dark:text-white'>
                   {formatDateTime(selectedSession.closesAt)}
                 </p>
@@ -407,7 +428,7 @@ export default function HandleCheckIn() {
           </Card>
         ) : (
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {sessions?.map((session) => {
+            {sessions.map((session) => {
               const status = getSessionStatus(session);
 
               return (
@@ -477,7 +498,7 @@ export default function HandleCheckIn() {
               Loading services...
             </p>
           </Card>
-        ) : services?.length === 0 ? (
+        ) : services.length === 0 ? (
           <Card>
             <div className='py-6 text-center'>
               <p className='font-medium text-zinc-900 dark:text-white'>
@@ -491,16 +512,19 @@ export default function HandleCheckIn() {
           </Card>
         ) : (
           <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-3'>
-            {services?.map((service) => {
+            {services.map((service) => {
               const session = sessions.find(
                 (item) =>
                   item.service?._id === service._id ||
                   item.service === service._id,
               );
 
+              const isProcessing = deletingId === service._id;
+
               return (
                 <Card key={service._id}>
                   <div className='flex h-full flex-col'>
+                    {/* Service heading */}
                     <div className='flex items-start justify-between gap-3'>
                       <div>
                         <h3 className='font-semibold text-zinc-900 dark:text-white'>
@@ -513,9 +537,12 @@ export default function HandleCheckIn() {
                         </p>
                       </div>
 
-                      <Badge tone='good'>Active</Badge>
+                      <Badge tone={service.active ? 'good' : 'neutral'}>
+                        {service.active ? 'Active' : 'Inactive'}
+                      </Badge>
                     </div>
 
+                    {/* Schedule information */}
                     <div className='mt-5 grid grid-cols-3 gap-2'>
                       <div className='rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900'>
                         <p className='text-xs text-zinc-500 dark:text-zinc-400'>
@@ -548,41 +575,55 @@ export default function HandleCheckIn() {
                       </div>
                     </div>
 
+                    {/* Service actions */}
                     <div className='mt-5 flex flex-1 flex-col justify-end gap-2'>
-                      {session ? (
-                        <Button onClick={() => setSelectedSession(session)}>
-                          View today’s code
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={() => generateCode(service._id)}
-                          disabled={generatingId === service._id}
-                        >
-                          {generatingId === service._id
-                            ? 'Generating...'
-                            : 'Generate today’s code'}
-                        </Button>
-                      )}
+                      {/* Generate/View code only for active services */}
+                      {service.active &&
+                        (session ? (
+                          <Button onClick={() => setSelectedSession(session)}>
+                            View today’s code
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => generateCode(service._id)}
+                            disabled={generatingId === service._id}
+                          >
+                            {generatingId === service._id
+                              ? 'Generating...'
+                              : 'Generate today’s code'}
+                          </Button>
+                        ))}
 
+                      {/* Edit + Activate/Deactivate */}
                       <div className='flex gap-2'>
                         <Button
                           variant='secondary'
                           onClick={() => openEditModal(service)}
+                          disabled={isProcessing}
                           className='flex-1'
                         >
                           Edit
                         </Button>
 
-                        <Button
-                          variant='secondary'
-                          onClick={() => deleteService(service)}
-                          disabled={deletingId === service._id}
-                          className='flex-1'
-                        >
-                          {deletingId === service._id
-                            ? 'Deleting...'
-                            : 'Delete'}
-                        </Button>
+                        {service.active ? (
+                          <Button
+                            variant='secondary'
+                            onClick={() => deleteService(service)}
+                            disabled={isProcessing}
+                            className='flex-1'
+                          >
+                            {isProcessing ? 'Deactivating...' : 'Deactivate'}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant='secondary'
+                            onClick={() => activate(service)}
+                            disabled={isProcessing}
+                            className='flex-1'
+                          >
+                            {isProcessing ? 'Activating...' : 'Activate'}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -1032,7 +1032,7 @@ export default function Contributions() {
                       </p>
                     ) : (
                       <div className='overflow-x-auto'>
-                        <table className='w-full text-left text-sm scrollbar-thin scrollbar-track-transparent'>
+                        <table className='w-full text-left text-xs lg:text-sm scrollbar-thin scrollbar-track-transparent'>
                           <thead>
                             <tr className='border-b border-zinc-200 text-zinc-500 dark:border-zinc-800 dark:text-zinc-400'>
                               <th className='py-2 pr-4 font-medium'>Member</th>
@@ -1058,7 +1058,7 @@ export default function Contributions() {
                               return (
                                 <tr
                                   key={entry._id}
-                                  className='border-b border-zinc-100 last:border-0 dark:border-zinc-800'
+                                  className='border-b text-xs lg:text-sm border-zinc-100 last:border-0 dark:border-zinc-800'
                                 >
                                   {isEditing ? (
                                     <>

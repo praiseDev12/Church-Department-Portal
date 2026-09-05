@@ -33,6 +33,12 @@ export function handleDeleteService(serviceId) {
   });
 }
 
+export function activateService(serviceId) {
+  return apiFetch(`/check-in/services/${serviceId}/activate`, {
+    method: 'PATCH',
+  });
+}
+
 export function generateCheckInCode(serviceId) {
   return apiFetch(`/check-in/services/${serviceId}/generate-code`, {
     method: 'POST',
