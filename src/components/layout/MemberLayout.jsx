@@ -2,6 +2,7 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import Button from '../ui/Button.jsx';
+import { LogOut, MoonIcon, SunIcon } from 'lucide-react';
 
 const navItems = [
   { to: '/portal', label: 'Home', end: true },
@@ -52,12 +53,16 @@ export default function MemberLayout() {
           <button
             onClick={toggleTheme}
             aria-label='Toggle color theme'
-            className='rounded-lg p-2 text-sm text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
+            className='rounded-full border p-2 text-sm text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
           >
-            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            {theme === 'dark' ? (
+              <SunIcon className='size-3 lg:size-5 text-brand dark:text-brand-200' />
+            ) : (
+              <MoonIcon className='size-3 lg:size-5 text-brand dark:text-brand-200' />
+            )}
           </button>
           <Button variant='secondary' onClick={logout}>
-            Log out
+            <LogOut size={20} className='text-red-200' />
           </Button>
         </div>
       </header>

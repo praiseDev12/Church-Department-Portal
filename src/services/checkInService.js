@@ -27,7 +27,7 @@ export function updateService(serviceId, data) {
   });
 }
 
-export function deleteService(serviceId) {
+export function handleDeleteService(serviceId) {
   return apiFetch(`/check-in/services/${serviceId}`, {
     method: 'DELETE',
   });

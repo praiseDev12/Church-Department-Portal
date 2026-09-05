@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext.jsx';
 import BrandLockup from '../ui/BrandLockup.jsx';
@@ -19,6 +19,7 @@ const navItems = [
   { to: '/check-in', label: 'Check-In' },
   { to: '/admin-checkin', label: 'Setup Check In', mainAdminOnly: true },
   { to: '/contributions', label: 'Contributions' },
+  { to: '/attendance', label: 'Attendance', mainAdminOnly: true },
   { to: '/reports', label: 'Reports' },
   { to: '/units', label: 'Units', mainAdminOnly: true },
   { to: '/audit-log', label: 'Audit Log', mainAdminOnly: true },
@@ -38,10 +39,10 @@ export default function Sidebar() {
       <button
         type='button'
         onClick={() => setIsOpen(true)}
-        className='fixed left-4 top-4 z-40 rounded-lg border border-zinc-200 bg-white p-2 text-zinc-700 shadow-sm md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
+        className='fixed left-0 top-9 z-40 rounded-lg border border-zinc-200 bg-white p-2 text-zinc-700 shadow-sm md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
         aria-label='Open navigation menu'
       >
-        <Menu size={24} />
+        <ChevronRight size={24} />
       </button>
 
       {/* Mobile overlay */}

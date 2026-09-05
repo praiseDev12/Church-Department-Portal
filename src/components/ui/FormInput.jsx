@@ -1,5 +1,5 @@
 const labelClass =
-  'mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300';
+  'mb-1.5 block text-xs lg:text-sm font-medium text-zinc-700 dark:text-zinc-300';
 const inputClass =
   'w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500';
 

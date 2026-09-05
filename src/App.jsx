@@ -16,10 +16,9 @@ import Units from './pages/Units.jsx';
 import AuditLog from './pages/AuditLog.jsx';
 import NotFound from './pages/NotFound.jsx';
 import HandleCheckIn from './pages/HandleCheckIn.jsx';
+import AttendanceReport from './pages/AttendanceReport.jsx';
 
-// Dashboard routes — unit_admin or main_admin only. A plain member
-// hitting these gets sent to their own portal instead of the login page,
-// since they do have a valid session, just not this level of access.
+// checks for authentication and admin privileges before rendering the children components
 function RequireAdmin({ children }) {
   const { user, isAdmin } = useAuth();
   if (!user) return <Navigate to='/login' replace />;
@@ -27,18 +26,24 @@ function RequireAdmin({ children }) {
   return children;
 }
 
+// checks for authentication and main admin privileges before rendering the children components
 function RequireMainAdmin({ children }) {
   const { isMainAdmin } = useAuth();
   if (!isMainAdmin) return <Navigate to='/' replace />;
   return children;
 }
 
-// The member portal — open to every signed-in account regardless of
-// role, since admins are members too and can check in themselves.
+// checks for authentication before rendering the children components
 function RequireAuth({ children }) {
   const { user } = useAuth();
   if (!user) return <Navigate to='/login' replace />;
   return children;
+}
+
+// renders the appropriate layout based on the user's admin status
+function CheckInShell() {
+  const { isAdmin } = useAuth();
+  return isAdmin ? <AppLayout /> : <MemberLayout />;
 }
 
 export default function App() {
@@ -57,6 +62,15 @@ export default function App() {
       >
         <Route path='/portal' element={<MemberHome />} />
         <Route path='/profile' element={<ProfileSettings />} />
+      </Route>
+
+      <Route
+        element={
+          <RequireAuth>
+            <CheckInShell />
+          </RequireAuth>
+        }
+      >
         <Route path='/check-in' element={<CheckIn />} />
       </Route>
 
@@ -72,6 +86,7 @@ export default function App() {
         <Route path='/check-in' element={<CheckIn />} />
         <Route path='/contributions' element={<Contributions />} />
         <Route path='/reports' element={<Reports />} />
+        <Route path='/attendance' element={<AttendanceReport />} />
         <Route
           path='/units'
           element={

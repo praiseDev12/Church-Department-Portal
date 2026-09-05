@@ -1,14 +1,19 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import { loadSession, saveSession, clearSession } from '../lib/session.js';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-// One session for every role — member, unit_admin, main_admin. The
-// backend issues one token type for everyone now; which UI a person
-// sees is decided purely by user.role, not by which login page they used.
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(loadSession);
+  const navigate = useNavigate();
 
   const login = useCallback((sessionData) => {
     saveSession(sessionData);
@@ -27,6 +32,21 @@ export function AuthProvider({ children }) {
   const isUnitAdmin = user?.role === 'unit_admin';
   const isAdmin = isMainAdmin || isUnitAdmin;
   const isMember = user?.role === 'member';
+
+  useEffect(() => {
+    if (!token) return;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.exp * 1000 < Date.now()) {
+        localStorage.clear();
+        navigate('/login');
+      }
+    } catch {
+      // malformed token — clear it
+      localStorage.clear();
+      navigate('/login');
+    }
+  }, []);
 
   return (
     <AuthContext.Provider

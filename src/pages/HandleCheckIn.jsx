@@ -8,7 +8,14 @@ import FormSelect from '../components/ui/FormSelect.jsx';
 import { apiFetch } from '../lib/api.js';
 import axios from 'axios';
 import { backendUrl } from '../context/AuthContext.jsx';
-import { generateCheckInCode } from '../services/checkInService.js';
+import {
+  createService,
+  generateCheckInCode,
+  getServices,
+  getTodaySessions,
+  handleDeleteService,
+  updateService,
+} from '../services/checkInService.js';
 
 const dayOptions = [
   { value: '0', label: 'Sunday' },
@@ -129,9 +136,9 @@ export default function HandleCheckIn() {
     try {
       setError('');
 
-      const data = await apiFetch('/services');
+      const data = await getServices();
 
-      setServices(data || []);
+      setServices(data.services || []);
     } catch (err) {
       setError(err.message || 'Unable to load services.');
     } finally {
@@ -143,7 +150,7 @@ export default function HandleCheckIn() {
     try {
       setSessionError('');
 
-      const data = await apiFetch('/check-in/sessions/today');
+      const data = await getTodaySessions();
 
       setSessions(data.sessions || []);
     } catch (err) {
@@ -162,10 +169,6 @@ export default function HandleCheckIn() {
     try {
       setGeneratingId(serviceId);
       setError('');
-
-      // const data = await apiFetch(`/services/${serviceId}/generate-code`, {
-      //   method: 'POST',
-      // });
 
       const data = await generateCheckInCode(serviceId);
 
@@ -238,15 +241,9 @@ export default function HandleCheckIn() {
       }
 
       if (!editingService) {
-        await apiFetch('/services', {
-          method: 'POST',
-          body: JSON.stringify(payload),
-        });
+        await createService(payload);
       } else {
-        await apiFetch(`/services/${editingService._id}`, {
-          method: 'PATCH',
-          body: JSON.stringify(payload),
-        });
+        await updateService(editingService._id, payload);
       }
 
       setShowServiceModal(false);
@@ -272,9 +269,7 @@ export default function HandleCheckIn() {
       setDeletingId(service._id);
       setError('');
 
-      await apiFetch(`/services/${service._id}`, {
-        method: 'DELETE',
-      });
+      await handleDeleteService(service._id);
 
       await loadServices();
       await loadSessions();
@@ -412,7 +407,7 @@ export default function HandleCheckIn() {
           </Card>
         ) : (
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {sessions.map((session) => {
+            {sessions?.map((session) => {
               const status = getSessionStatus(session);
 
               return (
@@ -482,7 +477,7 @@ export default function HandleCheckIn() {
               Loading services...
             </p>
           </Card>
-        ) : services.length === 0 ? (
+        ) : services?.length === 0 ? (
           <Card>
             <div className='py-6 text-center'>
               <p className='font-medium text-zinc-900 dark:text-white'>
@@ -496,7 +491,7 @@ export default function HandleCheckIn() {
           </Card>
         ) : (
           <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-3'>
-            {services.map((service) => {
+            {services?.map((service) => {
               const session = sessions.find(
                 (item) =>
                   item.service?._id === service._id ||
