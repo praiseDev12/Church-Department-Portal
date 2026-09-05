@@ -13,6 +13,7 @@ import {
   FileDown,
   MoreVertical,
   ImageDown,
+  Search,
 } from 'lucide-react';
 
 import Card from '../components/ui/Card.jsx';
@@ -97,6 +98,7 @@ export default function Contributions() {
   const [members, setMembers] = useState([]);
   const [memberSearch, setMemberSearch] = useState('');
   const [loadingMembers, setLoadingMembers] = useState(false);
+  const [showMemberDropdown, setShowMemberDropdown] = useState(false);
 
   // Entry form state variables
   const [selectedMemberId, setSelectedMemberId] = useState('');
@@ -874,25 +876,115 @@ export default function Contributions() {
 
                       <div className='grid gap-4 md:grid-cols-3'>
                         <div>
-                          <label className='mb-1.5 block text-sm font-medium'>
-                            Member
-                          </label>
+                          <div className='relative'>
+                            <label className='mb-1.5 block text-sm font-medium'>
+                              Member
+                            </label>
 
-                          <select
-                            value={selectedMemberId}
-                            onChange={(e) =>
-                              setSelectedMemberId(e.target.value)
-                            }
-                            className='w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800'
-                          >
-                            <option value=''>Select member</option>
+                            <div className='relative'>
+                              <Search
+                                size={16}
+                                className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400'
+                              />
 
-                            {members?.map((member) => (
-                              <option key={member._id} value={member._id}>
-                                {member.fullName}
-                              </option>
-                            ))}
-                          </select>
+                              <input
+                                type='text'
+                                value={
+                                  selectedMemberId
+                                    ? members.find(
+                                        (member) =>
+                                          member._id === selectedMemberId,
+                                      )?.fullName || ''
+                                    : memberSearch
+                                }
+                                onChange={(e) => {
+                                  setMemberSearch(e.target.value);
+                                  setSelectedMemberId('');
+                                  setShowMemberDropdown(true);
+                                }}
+                                onFocus={() => setShowMemberDropdown(true)}
+                                placeholder='Search member...'
+                                className='w-full rounded-lg border border-zinc-300 bg-white py-2.5 pl-9 pr-10 text-sm outline-none focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800'
+                              />
+
+                              {selectedMemberId ? (
+                                <button
+                                  type='button'
+                                  onClick={() => {
+                                    setSelectedMemberId('');
+                                    setMemberSearch('');
+                                    setShowMemberDropdown(true);
+                                  }}
+                                  className='absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 dark:hover:text-white'
+                                  aria-label='Clear selected member'
+                                >
+                                  <X size={16} />
+                                </button>
+                              ) : (
+                                <ChevronDown
+                                  size={16}
+                                  className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400'
+                                />
+                              )}
+                            </div>
+
+                            {showMemberDropdown && !selectedMemberId && (
+                              <div className='absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-y-auto rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900'>
+                                {(() => {
+                                  const query = memberSearch
+                                    .trim()
+                                    .toLowerCase();
+
+                                  const filteredMembers = members.filter(
+                                    (member) =>
+                                      member.fullName
+                                        ?.toLowerCase()
+                                        .includes(query),
+                                  );
+
+                                  if (filteredMembers.length === 0) {
+                                    return (
+                                      <div className='px-3 py-3 text-sm text-zinc-500'>
+                                        No members found
+                                      </div>
+                                    );
+                                  }
+
+                                  return filteredMembers.map((member) => (
+                                    <button
+                                      key={member._id}
+                                      type='button'
+                                      onClick={() => {
+                                        setSelectedMemberId(member._id);
+                                        setMemberSearch(member.fullName);
+                                        setShowMemberDropdown(false);
+                                      }}
+                                      className='flex w-full items-center justify-between px-3 py-2.5 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                                    >
+                                      <div>
+                                        <p className='font-medium text-zinc-900 dark:text-white'>
+                                          {member.fullName}
+                                        </p>
+
+                                        {member.phoneNumber && (
+                                          <p className='text-xs text-zinc-500 dark:text-zinc-400'>
+                                            {member.phoneNumber}
+                                          </p>
+                                        )}
+                                      </div>
+
+                                      {selectedMemberId === member._id && (
+                                        <Check
+                                          size={16}
+                                          className='text-brand-500'
+                                        />
+                                      )}
+                                    </button>
+                                  ));
+                                })()}
+                              </div>
+                            )}
+                          </div>
                         </div>
 
                         <div>
