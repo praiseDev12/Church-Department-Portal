@@ -51,6 +51,11 @@ export default function Contributions() {
   const [error, setError] = useState('');
   const [expandedId, setExpandedId] = useState(null);
 
+  // Filter state variables
+  const [search, setSearch] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+
   // Form state variables
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [title, setTitle] = useState('');
@@ -370,6 +375,30 @@ export default function Contributions() {
     loadMembers();
   }, [memberSearch]);
 
+  const filteredContributions = contributions.filter((contribution) => {
+    const matchesSearch = contribution.title
+      ?.toLowerCase()
+      .includes(search.trim().toLowerCase());
+
+    const createdDate = contribution.createdAt
+      ? new Date(contribution.createdAt)
+      : null;
+
+    let matchesDate = true;
+
+    if (createdDate && dateFrom) {
+      const from = new Date(`${dateFrom}T00:00:00`);
+      matchesDate = createdDate >= from;
+    }
+
+    if (createdDate && dateTo && matchesDate) {
+      const to = new Date(`${dateTo}T23:59:59.999`);
+      matchesDate = createdDate <= to;
+    }
+
+    return matchesSearch && matchesDate;
+  });
+
   // Render the component
   if (loading) {
     return (
@@ -410,6 +439,80 @@ export default function Contributions() {
           <p className='text-sm text-red-500'>{error}</p>
         </Card>
       )}
+
+      <Card>
+        <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-1'>
+            <h2 className='font-semibold'>Find Contribution Records</h2>
+            <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+              Search and filter your contribution history
+            </p>
+          </div>
+
+          <div className='grid gap-4 md:grid-cols-[minmax(0,2fr)_1fr_1fr_auto]'>
+            <div>
+              <label className='mb-1.5 block text-sm font-medium'>Search</label>
+
+              <input
+                type='text'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder='Search by contribution title...'
+                className='w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
+              />
+            </div>
+
+            <div>
+              <label className='mb-1.5 block text-sm font-medium'>From</label>
+
+              <input
+                type='date'
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className='w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
+              />
+            </div>
+
+            <div>
+              <label className='mb-1.5 block text-sm font-medium'>To</label>
+
+              <input
+                type='date'
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                className='w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
+              />
+            </div>
+
+            <div className='flex items-end'>
+              <Button
+                type='button'
+                variant='secondary'
+                onClick={() => {
+                  setSearch('');
+                  setDateFrom('');
+                  setDateTo('');
+                }}
+                disabled={!search && !dateFrom && !dateTo}
+              >
+                Clear
+              </Button>
+            </div>
+          </div>
+
+          <div className='text-sm text-zinc-500 dark:text-zinc-400'>
+            Showing{' '}
+            <span className='font-medium text-zinc-900 dark:text-zinc-100'>
+              {filteredContributions.length}
+            </span>{' '}
+            of{' '}
+            <span className='font-medium text-zinc-900 dark:text-zinc-100'>
+              {contributions.length}
+            </span>{' '}
+            records
+          </div>
+        </div>
+      </Card>
 
       {showCreateForm && (
         <Card>
@@ -453,21 +556,31 @@ export default function Contributions() {
         </Card>
       )}
 
-      {contributions.length === 0 ? (
+      {filteredContributions?.length === 0 ? (
         <Card>
           <div className='py-10 text-center'>
             <Wallet size={36} className='mx-auto mb-3 text-zinc-400' />
 
-            <p className='font-medium'>No contribution records yet</p>
-
-            <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
-              Create a record to start documenting member contributions
-            </p>
+            {contributions.length === 0 ? (
+              <>
+                <p className='font-medium'>No contribution records yet</p>
+                <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+                  Create a record to start documenting member contributions
+                </p>
+              </>
+            ) : (
+              <>
+                <p className='font-medium'>No matching records</p>
+                <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+                  Try changing your search or date filters
+                </p>
+              </>
+            )}
           </div>
         </Card>
       ) : (
         <div className='flex flex-col gap-3'>
-          {contributions.map((contribution) => {
+          {filteredContributions?.map((contribution) => {
             const isExpanded = expandedId === contribution._id;
 
             return (
