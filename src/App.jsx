@@ -13,7 +13,6 @@ import CheckIn from './pages/CheckIn.jsx';
 import Contributions from './pages/Contributions.jsx';
 import Reports from './pages/Reports.jsx';
 import Units from './pages/Units.jsx';
-import AuditLog from './pages/AuditLog.jsx';
 import NotFound from './pages/NotFound.jsx';
 import HandleCheckIn from './pages/HandleCheckIn.jsx';
 import AttendanceReport from './pages/AttendanceReport.jsx';
@@ -108,14 +107,6 @@ export default function App() {
           element={
             <RequireMainAdmin>
               <HandleCheckIn />
-            </RequireMainAdmin>
-          }
-        />
-        <Route
-          path='/audit-log'
-          element={
-            <RequireMainAdmin>
-              <AuditLog />
             </RequireMainAdmin>
           }
         />

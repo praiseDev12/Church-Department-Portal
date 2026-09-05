@@ -22,7 +22,6 @@ const navItems = [
   { to: '/attendance', label: 'Attendance', mainAdminOnly: true },
   { to: '/reports', label: 'Reports' },
   { to: '/units', label: 'Units', mainAdminOnly: true },
-  { to: '/audit-log', label: 'Audit Log', mainAdminOnly: true },
 ];
 
 export default function Sidebar() {
