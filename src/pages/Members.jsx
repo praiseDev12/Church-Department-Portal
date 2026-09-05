@@ -819,6 +819,10 @@ export default function Members() {
     setRoleChangeMember(null);
   }
 
+  useEffect(() => {
+    document.title = 'Members - Department Management';
+  }, []);
+
   return (
     <div className='flex min-w-0 flex-col gap-4'>
       {/* Page header */}

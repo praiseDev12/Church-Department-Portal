@@ -38,6 +38,10 @@ export default function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    document.title = 'Dashboard';
+  }, []);
+
   return (
     <div className='flex flex-col gap-6 dark:text-white'>
       <div>

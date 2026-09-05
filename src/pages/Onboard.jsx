@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Building2, Users, UserCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -63,6 +63,10 @@ export default function Onboard() {
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Onboard';
+  }, []);
 
   function handleChange(field) {
     return (e) => setForm((f) => ({ ...f, [field]: e.target.value }));

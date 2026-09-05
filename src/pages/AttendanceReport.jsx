@@ -68,6 +68,9 @@ export default function AttendanceReport() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  useEffect(() => {
+    document.title = 'Attendance Report';
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

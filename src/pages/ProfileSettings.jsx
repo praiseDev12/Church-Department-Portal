@@ -65,6 +65,10 @@ export default function ProfileSettings() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    document.title = 'Profile Settings';
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
 
     getOwnProfile()

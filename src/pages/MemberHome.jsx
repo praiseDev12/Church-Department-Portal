@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import PhotoUpload from '../components/members/PhotoUpload.jsx';
 
@@ -12,6 +12,10 @@ export default function MemberHome() {
     // immediately anywhere else it's referenced (e.g. after a refresh).
     login({ token, user: { ...user, photoUrl: updatedMember.photoUrl } });
   }
+
+  useEffect(() => {
+    document.title = 'Home';
+  }, []);
 
   return (
     <div className='mx-auto flex w-full max-w-md flex-col items-center gap-6 text-center'>

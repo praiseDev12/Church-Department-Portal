@@ -103,6 +103,10 @@ export default function MemberRegister() {
     }
   }
 
+  useEffect(() => {
+    document.title = 'Register';
+  }, []);
+
   return (
     <div className='flex min-h-screen bg-brand-50 dark:bg-zinc-900 text-black dark:text-white'>
       <div className='relative hidden w-[38%] shrink-0 overflow-hidden bg-brand-900 lg:flex lg:flex-col lg:justify-between lg:p-10'>

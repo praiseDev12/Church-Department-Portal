@@ -456,6 +456,10 @@ export default function Contributions() {
     return matchesSearch && matchesDate && matchesMember;
   });
 
+  useEffect(() => {
+    document.title = 'Contributions - Department Management';
+  }, []);
+
   // Render the component
   if (loading) {
     return (

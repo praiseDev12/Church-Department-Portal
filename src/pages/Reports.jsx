@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ClipboardCheck, HandCoins, Users, FileText } from 'lucide-react';
 
@@ -147,6 +147,10 @@ export default function Reports() {
       setGenerating(false);
     }
   };
+
+  useEffect(() => {
+    document.title = 'Reports';
+  }, []);
 
   return (
     <div className='flex flex-col gap-6 dark:text-white'>

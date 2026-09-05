@@ -302,6 +302,10 @@ export default function HandleCheckIn() {
     loadSessions();
   }, []);
 
+  useEffect(() => {
+    document.title = 'Service Check-In';
+  }, []);
+
   return (
     <div className='flex flex-col gap-6'>
       {/* Header */}

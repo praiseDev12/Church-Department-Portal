@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Card from '../components/ui/Card.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -52,6 +52,10 @@ export default function CheckIn() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    document.title = 'Check In';
+  }, []);
 
   return (
     <div className='mx-auto flex max-w-md flex-col gap-4'>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Users, CalendarCheck, Wallet, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -33,6 +33,10 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Login';
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -78,10 +82,7 @@ export default function Login() {
             {whatYouCanDo.map(({ icon: Icon, title, detail }) => (
               <li key={title} className='flex items-start gap-3.5'>
                 <span className='mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10'>
-                  <Icon
-                    className='h-[18px] w-[18px] text-white'
-                    strokeWidth={1.75}
-                  />
+                  <Icon className='h-4.5 w-4.5 text-white' strokeWidth={1.75} />
                 </span>
                 <div>
                   <p className='text-sm font-medium text-white'>{title}</p>

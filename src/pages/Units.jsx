@@ -384,6 +384,10 @@ export default function Units() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState('');
 
+  useEffect(() => {
+    document.title = 'Units';
+  }, []);
+
   const fetchUnits = async () => {
     try {
       setLoading(true);
