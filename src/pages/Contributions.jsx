@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ChevronDown,
   ChevronUp,
@@ -9,6 +10,9 @@ import {
   Trash2,
   X,
   Check,
+  FileDown,
+  MoreVertical,
+  ImageDown,
 } from 'lucide-react';
 
 import Card from '../components/ui/Card.jsx';
@@ -23,8 +27,10 @@ import {
   updateContribution,
   deleteContribution,
 } from '../services/contributionService.js';
-
 import { getMembers } from '../services/memberService.js';
+
+import { exportContributionPdf } from '../utils/contributionPdf.js';
+import { exportContributionImage } from '../utils/contributionImage.js';
 
 function formatAmount(amount) {
   return new Intl.NumberFormat('en-NG', {
@@ -44,17 +50,43 @@ function formatDate(date) {
   });
 }
 
+function ActionMenuItem({ icon: Icon, children, onClick, danger = false }) {
+  return (
+    <button
+      type='button'
+      onClick={onClick}
+      className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm transition-colors ${
+        danger
+          ? 'text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40'
+          : 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800'
+      }`}
+    >
+      <Icon size={16} />
+      <span>{children}</span>
+    </button>
+  );
+}
+
 export default function Contributions() {
   // State variables
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+  const [openActionMenu, setOpenActionMenu] = useState(null);
+  const actionMenuRef = useRef(null);
+  const actionMenuPortalRef = useRef(null);
+  const [menuPosition, setMenuPosition] = useState({
+    top: 0,
+    left: 0,
+    openUpward: false,
+  });
 
   // Filter state variables
   const [search, setSearch] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [memberFilter, setMemberFilter] = useState('');
 
   // Form state variables
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -375,10 +407,29 @@ export default function Contributions() {
     loadMembers();
   }, [memberSearch]);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      const clickedTrigger = actionMenuRef.current?.contains(event.target);
+      const clickedMenu = actionMenuPortalRef.current?.contains(event.target);
+
+      if (!clickedTrigger && !clickedMenu) {
+        setOpenActionMenu(null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const filteredContributions = contributions.filter((contribution) => {
+    const normalizedSearch = search.trim().toLowerCase();
+
     const matchesSearch = contribution.title
       ?.toLowerCase()
-      .includes(search.trim().toLowerCase());
+      .includes(normalizedSearch);
 
     const createdDate = contribution.createdAt
       ? new Date(contribution.createdAt)
@@ -396,7 +447,11 @@ export default function Contributions() {
       matchesDate = createdDate <= to;
     }
 
-    return matchesSearch && matchesDate;
+    const matchesMember =
+      !memberFilter ||
+      contribution.entries?.some((entry) => entry.member?._id === memberFilter);
+
+    return matchesSearch && matchesDate && matchesMember;
   });
 
   // Render the component
@@ -449,7 +504,7 @@ export default function Contributions() {
             </p>
           </div>
 
-          <div className='grid gap-4 md:grid-cols-[minmax(0,2fr)_1fr_1fr_auto]'>
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_1fr_1fr_1fr_auto]'>
             <div>
               <label className='mb-1.5 block text-sm font-medium'>Search</label>
 
@@ -484,6 +539,24 @@ export default function Contributions() {
               />
             </div>
 
+            <div>
+              <label className='mb-1.5 block text-sm font-medium'>Member</label>
+
+              <select
+                value={memberFilter}
+                onChange={(e) => setMemberFilter(e.target.value)}
+                className='w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
+              >
+                <option value=''>All members</option>
+
+                {members.map((member) => (
+                  <option key={member._id} value={member._id}>
+                    {member.fullName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className='flex items-end'>
               <Button
                 type='button'
@@ -492,8 +565,9 @@ export default function Contributions() {
                   setSearch('');
                   setDateFrom('');
                   setDateTo('');
+                  setMemberFilter('');
                 }}
-                disabled={!search && !dateFrom && !dateTo}
+                disabled={!search && !dateFrom && !dateTo && !memberFilter}
               >
                 Clear
               </Button>
@@ -584,116 +658,195 @@ export default function Contributions() {
             const isExpanded = expandedId === contribution._id;
 
             return (
-              <Card key={contribution._id} className='overflow-hidden'>
-                <div className='flex w-full items-center justify-between gap-4 text-left'>
-                  {/* Clickable contribution title / expand area */}
-                  <button
-                    type='button'
-                    onClick={() => toggleExpanded(contribution._id)}
-                    className='min-w-0 flex-1 text-left'
-                  >
-                    {editingContributionId === contribution._id ? (
-                      <div
-                        className='flex flex-col gap-2 sm:flex-row'
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <input
-                          type='text'
-                          value={editContributionTitle}
-                          onChange={(e) =>
-                            setEditContributionTitle(e.target.value)
+              <Card key={contribution._id} className='overflow-visible'>
+                <div className='flex w-full items-start justify-between gap-3 text-left'>
+                  {editingContributionId === contribution._id ? (
+                    <div className='flex min-w-0 flex-1 flex-col gap-2 sm:flex-row'>
+                      <input
+                        type='text'
+                        value={editContributionTitle}
+                        onChange={(e) =>
+                          setEditContributionTitle(e.target.value)
+                        }
+                        autoFocus
+                        className='w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
+                      />
+
+                      <div className='flex shrink-0 items-center gap-1'>
+                        <button
+                          type='button'
+                          onClick={() =>
+                            handleUpdateContribution(contribution._id)
                           }
-                          autoFocus
-                          className='w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100'
-                        />
+                          disabled={
+                            savingContribution || !editContributionTitle.trim()
+                          }
+                          className='rounded-lg p-2 text-green-600 transition-colors hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-green-950'
+                          title='Save title'
+                        >
+                          <Check size={17} />
+                        </button>
 
-                        <div className='flex shrink-0 items-center gap-1'>
-                          <button
-                            type='button'
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleUpdateContribution(contribution._id);
-                            }}
-                            disabled={
-                              savingContribution ||
-                              !editContributionTitle.trim()
-                            }
-                            className='rounded-lg p-2 text-green-600 transition-colors hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-green-950'
-                            title='Save title'
-                          >
-                            <Check size={17} />
-                          </button>
-
-                          <button
-                            type='button'
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              cancelEditingContribution();
-                            }}
-                            disabled={savingContribution}
-                            className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800'
-                            title='Cancel'
-                          >
-                            <X size={17} />
-                          </button>
-                        </div>
+                        <button
+                          type='button'
+                          onClick={cancelEditingContribution}
+                          disabled={savingContribution}
+                          className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800'
+                          title='Cancel'
+                        >
+                          <X size={17} />
+                        </button>
                       </div>
-                    ) : (
-                      <>
-                        <h2 className='truncate font-semibold'>
-                          {contribution.title}
-                        </h2>
-
-                        <div className='mt-2 flex flex-wrap items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400'>
-                          <span className='flex items-center gap-1.5'>
-                            <Users size={15} />
-                            {contribution.entries?.length || 0} contributors
-                          </span>
-
-                          <span>
-                            Recorded {formatDate(contribution.createdAt)}
-                          </span>
-                        </div>
-                      </>
-                    )}
-                  </button>
-
-                  {/* Amount + record controls */}
-                  <div className='flex shrink-0 items-center gap-2'>
-                    <span className='font-semibold'>
-                      {formatAmount(contribution.totalAmount)}
-                    </span>
-
-                    <button
-                      type='button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        startEditingContribution(contribution);
-                      }}
-                      className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
-                      title='Edit contribution record'
-                    >
-                      <Pencil size={16} />
-                    </button>
-
-                    <button
-                      type='button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteContribution(contribution._id);
-                      }}
-                      disabled={deletingContributionId === contribution._id}
-                      className='rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-red-950'
-                      title='Delete contribution record'
-                    >
-                      <Trash2 size={16} />
-                    </button>
-
+                    </div>
+                  ) : (
                     <button
                       type='button'
                       onClick={() => toggleExpanded(contribution._id)}
-                      className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                      className='min-w-0 flex-1 text-left'
+                    >
+                      <h2 className='truncate font-semibold'>
+                        {contribution.title}
+                      </h2>
+
+                      <div className='mt-2 flex flex-wrap items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400'>
+                        <span className='flex items-center gap-1.5'>
+                          <Users size={15} />
+                          {contribution.entries?.length || 0} contributors
+                        </span>
+
+                        <span>
+                          Recorded {formatDate(contribution.createdAt)}
+                        </span>
+                      </div>
+                    </button>
+                  )}
+
+                  <div className='flex shrink-0 items-center gap-1'>
+                    <span className='hidden sm:inline font-semibold'>
+                      {formatAmount(contribution.totalAmount)}
+                    </span>
+
+                    {/* ACTION MENU */}
+                    <div ref={actionMenuRef} className='relative'>
+                      <button
+                        type='button'
+                        onClick={(e) => {
+                          e.stopPropagation();
+
+                          const rect = e.currentTarget.getBoundingClientRect();
+
+                          const menuWidth = 208;
+                          const menuHeight = 190;
+                          const gap = 8;
+
+                          const spaceBelow = window.innerHeight - rect.bottom;
+                          const spaceAbove = rect.top;
+
+                          const openUpward =
+                            spaceBelow < menuHeight + gap &&
+                            spaceAbove >= menuHeight + gap;
+
+                          let top;
+
+                          if (openUpward) {
+                            top = rect.top - menuHeight - gap;
+                          } else {
+                            top = rect.bottom + gap;
+                          }
+
+                          let left = rect.right - menuWidth;
+
+                          if (left < 8) {
+                            left = 8;
+                          }
+
+                          if (left + menuWidth > window.innerWidth - 8) {
+                            left = window.innerWidth - menuWidth - 8;
+                          }
+
+                          setMenuPosition({
+                            top: Math.max(8, top),
+                            left,
+                            openUpward,
+                          });
+
+                          const menuId = `contribution-${contribution._id}`;
+
+                          setOpenActionMenu((current) =>
+                            current === menuId ? null : menuId,
+                          );
+                        }}
+                        className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+                        title='Actions'
+                        aria-label='Contribution actions'
+                      >
+                        <MoreVertical size={20} />
+                      </button>
+                      {openActionMenu === `contribution-${contribution._id}` &&
+                        createPortal(
+                          <div
+                            ref={actionMenuPortalRef}
+                            className='fixed z-9999 w-52 overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-xl dark:border-zinc-700 dark:bg-zinc-900'
+                            style={{
+                              top: `${menuPosition.top}px`,
+                              left: `${menuPosition.left}px`,
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ActionMenuItem
+                              icon={FileDown}
+                              onClick={() => {
+                                setOpenActionMenu(null);
+                                exportContributionPdf(contribution);
+                              }}
+                            >
+                              Export PDF
+                            </ActionMenuItem>
+
+                            <ActionMenuItem
+                              icon={ImageDown}
+                              onClick={() => {
+                                setOpenActionMenu(null);
+                                exportContributionImage(contribution);
+                              }}
+                            >
+                              Export Image
+                            </ActionMenuItem>
+
+                            <ActionMenuItem
+                              icon={Pencil}
+                              onClick={() => {
+                                setOpenActionMenu(null);
+                                startEditingContribution(contribution);
+                              }}
+                            >
+                              Edit contribution
+                            </ActionMenuItem>
+
+                            <div className='my-1 border-t border-zinc-200 dark:border-zinc-800' />
+
+                            <ActionMenuItem
+                              icon={Trash2}
+                              danger
+                              onClick={() => {
+                                setOpenActionMenu(null);
+                                handleDeleteContribution(contribution._id);
+                              }}
+                            >
+                              Delete contribution
+                            </ActionMenuItem>
+                          </div>,
+                          document.body,
+                        )}
+                    </div>
+
+                    {/* EXPAND BUTTON */}
+                    <button
+                      type='button'
+                      onClick={() => toggleExpanded(contribution._id)}
+                      className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
                       title={isExpanded ? 'Collapse' : 'Expand'}
+                      aria-label={isExpanded ? 'Collapse' : 'Expand'}
                     >
                       {isExpanded ? (
                         <ChevronUp size={20} />
@@ -787,7 +940,7 @@ export default function Contributions() {
                       </p>
                     ) : (
                       <div className='overflow-x-auto'>
-                        <table className='w-full text-left text-sm'>
+                        <table className='w-full text-left text-sm scrollbar-thin scrollbar-track-transparent'>
                           <thead>
                             <tr className='border-b border-zinc-200 text-zinc-500 dark:border-zinc-800 dark:text-zinc-400'>
                               <th className='py-2 pr-4 font-medium'>Member</th>
@@ -920,14 +1073,15 @@ export default function Contributions() {
                                         </div>
                                       </td>
                                       <td className='py-3'>
-                                        <div className='flex items-center gap-1'>
+                                        <div className='flex justify-end gap-1'>
                                           <button
                                             type='button'
                                             onClick={() =>
                                               startEditingEntry(entry)
                                             }
-                                            className='rounded-lg p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+                                            className='rounded-lg p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white'
                                             title='Edit contribution'
+                                            aria-label='Edit contribution'
                                           >
                                             <Pencil size={16} />
                                           </button>
@@ -940,9 +1094,12 @@ export default function Contributions() {
                                                 entry._id,
                                               )
                                             }
-                                            disabled={isDeleting}
-                                            className='rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-red-950'
+                                            disabled={
+                                              deletingEntryId === entry._id
+                                            }
+                                            className='rounded-lg p-2 text-zinc-500 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50 dark:text-zinc-400 dark:hover:bg-red-950/30 dark:hover:text-red-400'
                                             title='Delete contribution'
+                                            aria-label='Delete contribution'
                                           >
                                             <Trash2 size={16} />
                                           </button>
