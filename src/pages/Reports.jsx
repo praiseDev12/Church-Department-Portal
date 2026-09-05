@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ClipboardCheck, HandCoins, Users } from 'lucide-react';
+import { ClipboardCheck, HandCoins, Users, FileText } from 'lucide-react';
 
 import Card from '../components/ui/Card.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -8,17 +8,26 @@ import { apiDownload } from '../lib/api.js';
 
 const reportTypes = [
   {
+    id: 'general',
+    title: 'General report',
+    description: 'Department overview, attendance, members, and contributions',
+    icon: FileText,
+  },
+
+  {
     id: 'attendance',
     title: 'Attendance report',
     description: 'Attendance records, on-time, late, and absent members',
     icon: ClipboardCheck,
   },
+
   {
     id: 'contributions',
     title: 'Contribution report',
     description: 'Recorded contributions, contributors, and total amounts',
     icon: HandCoins,
   },
+
   {
     id: 'members',
     title: 'Member report',
@@ -45,6 +54,8 @@ export default function Reports() {
   });
 
   const [generating, setGenerating] = useState(false);
+  const [generalFrom, setGeneralFrom] = useState('');
+  const [generalTo, setGeneralTo] = useState('');
   const [generationError, setGenerationError] = useState('');
 
   const handleGenerateReport = async (reportType) => {
@@ -59,7 +70,11 @@ export default function Reports() {
       (reportType === 'contributions' &&
         contributionFrom &&
         contributionTo &&
-        contributionFrom > contributionTo)
+        contributionFrom > contributionTo) ||
+      (reportType === 'general' &&
+        generalFrom &&
+        generalTo &&
+        generalFrom > generalTo)
     ) {
       setGenerationError('The From date cannot be later than the To date.');
       setGenerating(false);
@@ -93,6 +108,16 @@ export default function Reports() {
         }
 
         params.set('format', contributionFormat);
+      }
+
+      if (reportType === 'general') {
+        if (generalFrom) {
+          params.set('from', generalFrom);
+        }
+
+        if (generalTo) {
+          params.set('to', generalTo);
+        }
       }
 
       if (reportType === 'members') {
@@ -196,6 +221,56 @@ export default function Reports() {
               Configure the options for your selected report.
             </p>
           </div>
+
+          {selectedReport === 'general' && (
+            <div>
+              <div className='mb-4'>
+                <h3 className='text-sm font-medium text-zinc-900 dark:text-white'>
+                  General report period
+                </h3>
+
+                <p className='mt-1 text-xs text-zinc-500 dark:text-zinc-400'>
+                  Select the period you want included in the department
+                  overview.
+                </p>
+              </div>
+
+              <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+                <div>
+                  <label className='mb-1.5 block text-sm font-medium'>
+                    From
+                  </label>
+
+                  <input
+                    type='date'
+                    value={generalFrom}
+                    onChange={(e) => setGeneralFrom(e.target.value)}
+                    className='w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-900'
+                  />
+                </div>
+
+                <div>
+                  <label className='mb-1.5 block text-sm font-medium'>To</label>
+
+                  <input
+                    type='date'
+                    value={generalTo}
+                    onChange={(e) => setGeneralTo(e.target.value)}
+                    className='w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 dark:border-zinc-700 dark:bg-zinc-900'
+                  />
+                </div>
+              </div>
+
+              <div className='mt-6 flex justify-end'>
+                <Button
+                  onClick={() => handleGenerateReport('general')}
+                  disabled={generating}
+                >
+                  {generating ? 'Generating...' : 'Generate report'}
+                </Button>
+              </div>
+            </div>
+          )}
 
           {selectedReport === 'attendance' && (
             <div>
