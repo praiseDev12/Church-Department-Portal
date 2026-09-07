@@ -16,6 +16,8 @@ import Units from './pages/Units.jsx';
 import NotFound from './pages/NotFound.jsx';
 import HandleCheckIn from './pages/HandleCheckIn.jsx';
 import AttendanceReport from './pages/AttendanceReport.jsx';
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
 
 // checks for authentication and admin privileges before rendering the children components
 function RequireAdmin({ children }) {
@@ -51,6 +53,8 @@ export default function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/onboard' element={<Onboard />} />
       <Route path='/register' element={<MemberRegister />} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/reset-password/:token' element={<ResetPassword />} />
 
       <Route
         element={
