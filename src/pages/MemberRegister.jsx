@@ -49,22 +49,34 @@ export default function MemberRegister() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [departmentsLoading, setDepartmentsLoading] = useState(true);
+  const [unitsLoading, setUnitsLoading] = useState(false);
+
   useEffect(() => {
+    setDepartmentsLoading(true);
+
     apiFetch('/public/departments')
       .then((data) => setDepartments(data.departments))
       .catch(() =>
         setError('Could not load departments. Refresh and try again.'),
-      );
+      )
+      .finally(() => setDepartmentsLoading(false));
   }, []);
 
   useEffect(() => {
     if (!form.department) {
       setUnits([]);
+      setUnitsLoading(false);
       return;
     }
+
+    setUnitsLoading(true);
+    setUnits([]);
+
     apiFetch(`/public/departments/${form.department}/units`)
       .then((data) => setUnits(data.units))
-      .catch(() => setError('Could not load units for that department.'));
+      .catch(() => setError('Could not load units for that department.'))
+      .finally(() => setUnitsLoading(false));
   }, [form.department]);
 
   function handleChange(field) {
@@ -151,13 +163,18 @@ export default function MemberRegister() {
             <FormSelect
               id='department'
               label='Department'
-              placeholder='Select a department'
+              placeholder={
+                departmentsLoading
+                  ? 'Loading departments...'
+                  : 'Select a department'
+              }
               options={departments.map((d) => ({
                 value: d._id,
                 label: d.name,
               }))}
               value={form.department}
               onChange={handleChange('department')}
+              disabled={departmentsLoading}
               required
             />
 
@@ -165,15 +182,21 @@ export default function MemberRegister() {
               id='unit'
               label='Unit'
               placeholder={
-                form.department ? 'Select a unit' : 'Select a department first'
+                unitsLoading
+                  ? 'Loading units...'
+                  : form.department
+                    ? 'Select a unit'
+                    : 'Select a department first'
               }
-              options={units.map((u) => ({ value: u._id, label: u.name }))}
+              options={units.map((u) => ({
+                value: u._id,
+                label: u.name,
+              }))}
               value={form.unit}
               onChange={handleChange('unit')}
-              disabled={!form.department}
+              disabled={!form.department || unitsLoading}
               required
             />
-
             <FormInput
               id='fullName'
               label='Full name'
