@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { ChevronRight, X } from 'lucide-react';
+import { X, LogOut } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext.jsx';
 import BrandLockup from '../ui/BrandLockup.jsx';
@@ -24,9 +23,21 @@ const navItems = [
   { to: '/units', label: 'Units', mainAdminOnly: true },
 ];
 
-export default function Sidebar() {
-  const { isMainAdmin } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+function LogoutButton({ onClick }) {
+  return (
+    <button
+      type='button'
+      onClick={onClick}
+      className='flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-zinc-300 dark:hover:bg-red-500/10 dark:hover:text-red-400'
+    >
+      <LogOut size={18} />
+      Log out
+    </button>
+  );
+}
+
+export default function Sidebar({ open, onClose }) {
+  const { isMainAdmin, logout } = useAuth();
 
   const visibleNavItems = navItems.filter(
     (item) => !item.mainAdminOnly || isMainAdmin,
@@ -34,28 +45,18 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile hamburger button */}
-      <button
-        type='button'
-        onClick={() => setIsOpen(true)}
-        className='fixed left-0 top-9 z-40 rounded-lg border border-zinc-200 bg-white p-2 text-zinc-700 shadow-sm md:hidden dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'
-        aria-label='Open navigation menu'
-      >
-        <ChevronRight size={24} />
-      </button>
-
       {/* Mobile overlay */}
-      {isOpen && (
+      {open && (
         <div
           className='fixed inset-0 z-40 bg-black/50 md:hidden'
-          onClick={() => setIsOpen(false)}
+          onClick={onClose}
         />
       )}
 
       {/* Mobile sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-zinc-200 bg-white p-4 shadow-xl transition-transform duration-300 md:hidden dark:border-zinc-800 dark:bg-zinc-900 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Header */}
@@ -64,7 +65,7 @@ export default function Sidebar() {
 
           <button
             type='button'
-            onClick={() => setIsOpen(false)}
+            onClick={onClose}
             className='rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white'
             aria-label='Close navigation menu'
           >
@@ -79,7 +80,7 @@ export default function Sidebar() {
               key={item.to}
               to={item.to}
               end={item.end}
-              onClick={() => setIsOpen(false)}
+              onClick={onClose}
               className={({ isActive }) =>
                 `${linkBase} ${isActive ? linkActive : linkInactive}`
               }
@@ -88,6 +89,11 @@ export default function Sidebar() {
             </NavLink>
           ))}
         </nav>
+
+        {/* Logout — pinned to the bottom, below the nav's flex-1 */}
+        <div className='border-t border-zinc-100 pt-2 dark:border-zinc-800'>
+          <LogoutButton onClick={logout} />
+        </div>
       </aside>
 
       {/* Desktop sidebar */}
@@ -110,6 +116,10 @@ export default function Sidebar() {
             </NavLink>
           ))}
         </nav>
+
+        <div className='border-t border-zinc-100 pt-2 dark:border-zinc-800'>
+          <LogoutButton onClick={logout} />
+        </div>
       </aside>
     </>
   );

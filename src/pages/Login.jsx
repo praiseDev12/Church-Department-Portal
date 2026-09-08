@@ -169,6 +169,7 @@ export default function Login() {
               Create an account
             </Link>
             {' · '}
+            <br />
             <Link
               to='/onboard'
               className='font-medium text-brand-500 hover:underline dark:text-brand-300'
