@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Users, CalendarCheck, Wallet } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { apiFetch } from '../lib/api.js';
 import Button from '../components/ui/Button.jsx';
@@ -8,6 +8,27 @@ import FormInput from '../components/ui/FormInput.jsx';
 import FormSelect from '../components/ui/FormSelect.jsx';
 import BrandLockup from '../components/ui/BrandLockup.jsx';
 import DevelopedByCredit from '../components/ui/DevelopedByCredit.jsx';
+
+// Same list as the Login page's panel, for visual and structural
+// consistency between the two — a new member sees the same "what this
+// does" pitch as someone signing back in.
+const whatYouCanDo = [
+  {
+    icon: Users,
+    title: 'Members',
+    detail: 'Keep every member’s details up to date.',
+  },
+  {
+    icon: CalendarCheck,
+    title: 'Attendance',
+    detail: 'Track check-ins and lateness at a glance.',
+  },
+  {
+    icon: Wallet,
+    title: 'Contributions',
+    detail: 'Follow up on monthly payments with ease.',
+  },
+];
 
 const genderOptions = [
   { value: 'female', label: 'Female' },
@@ -121,7 +142,28 @@ export default function MemberRegister() {
 
   return (
     <div className='flex min-h-screen bg-brand-50 dark:bg-zinc-900 text-black dark:text-white'>
-      <div className='relative hidden w-[38%] shrink-0 overflow-hidden bg-brand-900 lg:flex lg:flex-col lg:justify-between lg:p-10'>
+      {/* Mobile-only decorative background — the brand panel below is
+          hidden under lg, so without this the page is just a flat
+          single-color fill. Fixed so it stays put regardless of how
+          long the form gets, rather than scrolling with the content. */}
+      <div className='fixed inset-0 z-0 overflow-hidden lg:hidden'>
+        <div
+          className='absolute inset-0 opacity-[0.15] dark:opacity-[0.08]'
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, #003599 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        <div className='absolute -right-16 -top-16 h-72 w-72 rounded-full bg-brand-300 opacity-30 blur-3xl dark:bg-brand-700 dark:opacity-20' />
+        <div className='absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-brand-200 opacity-30 blur-3xl dark:bg-brand-800 dark:opacity-20' />
+      </div>
+
+      {/* Decorative panel — matches Login's structure and width (42%).
+          sticky + h-screen keeps it pinned to the viewport while the
+          long form on the right scrolls past it, instead of stretching
+          to match the form's full height and scrolling away with it. */}
+      <div className='relative hidden w-[42%] shrink-0 overflow-hidden bg-brand-900 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-between lg:p-10'>
         <div
           className='pointer-events-none absolute inset-0 opacity-[0.22]'
           style={{
@@ -134,9 +176,24 @@ export default function MemberRegister() {
 
         <BrandLockup variant='dark' />
 
-        <h2 className='relative font-display text-3xl font-semibold leading-tight text-white'>
-          Join your unit and check in from your phone.
-        </h2>
+        <div className='relative flex flex-col gap-8'>
+          <h2 className='font-display text-3xl font-semibold leading-tight text-white'>
+            Join your unit and check in from your phone.
+          </h2>
+          <ul className='flex flex-col gap-5'>
+            {whatYouCanDo.map(({ icon: Icon, title, detail }) => (
+              <li key={title} className='flex items-start gap-3.5'>
+                <span className='mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10'>
+                  <Icon className='h-4.5 w-4.5 text-white' strokeWidth={1.75} />
+                </span>
+                <div>
+                  <p className='text-sm font-medium text-white'>{title}</p>
+                  <p className='mt-0.5 text-sm text-brand-100'>{detail}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div>
           <p className='relative text-xs text-brand-100'>

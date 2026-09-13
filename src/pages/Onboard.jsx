@@ -93,7 +93,19 @@ export default function Onboard() {
   return (
     <div className='flex min-h-screen bg-brand-50 dark:bg-zinc-900 text-black dark:text-white'>
       {/* Decorative panel — hidden on small screens */}
-      <div className='relative hidden w-[42%] shrink-0 overflow-hidden bg-brand-900 lg:flex lg:flex-col lg:justify-between lg:p-10'>
+      <div className='fixed inset-0 z-0 overflow-hidden lg:hidden'>
+        <div
+          className='absolute inset-0 opacity-[0.15] dark:opacity-[0.08]'
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, #003599 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        <div className='absolute -right-16 -top-16 h-72 w-72 rounded-full bg-brand-300 opacity-30 blur-3xl dark:bg-brand-700 dark:opacity-20' />
+        <div className='absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-brand-200 opacity-30 blur-3xl dark:bg-brand-800 dark:opacity-20' />
+      </div>
+      <div className='relative hidden w-[42%] shrink-0 overflow-hidden bg-brand-900 lg:sticky lg:top-0 lg:flex lg:flex-col lg:justify-between lg:h-screen lg:p-10'>
         <div
           className='pointer-events-none absolute inset-0 opacity-[0.22]'
           style={{

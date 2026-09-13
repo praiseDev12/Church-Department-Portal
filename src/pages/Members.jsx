@@ -837,13 +837,13 @@ export default function Members() {
           </p>
         </div>
 
-        <div className='flex w-full gap-2 sm:w-auto'>
+        {/* <div className='flex w-full gap-2 sm:w-auto'>
           <Button variant='secondary' className='flex-1 sm:flex-none'>
             Import CSV
           </Button>
 
           <Button className='flex-1 sm:flex-none'>Add member</Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Search */}
