@@ -18,8 +18,8 @@ const navItems = [
   { to: '/check-in', label: 'Check-In' },
   { to: '/admin-checkin', label: 'Setup Check In', mainAdminOnly: true },
   { to: '/contributions', label: 'Contributions', mainAdminOnly: true },
-  { to: '/attendance', label: 'Attendance', mainAdminOnly: true },
-  { to: '/reports', label: 'Reports' },
+  { to: '/attendance', label: 'Attendance', mainAdminOnly: false },
+  { to: '/reports', label: 'Reports', mainAdminOnly: true },
   { to: '/units', label: 'Units', mainAdminOnly: true },
 ];
 

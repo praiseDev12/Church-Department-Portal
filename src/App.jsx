@@ -87,8 +87,16 @@ export default function App() {
         <Route path='/' element={<Dashboard />} />
         <Route path='/members' element={<Members />} />
         <Route path='/check-in' element={<CheckIn />} />
-        <Route path='/reports' element={<Reports />} />
         <Route path='/attendance' element={<AttendanceReport />} />
+
+        <Route
+          path='/reports'
+          element={
+            <RequireMainAdmin>
+              <Reports />
+            </RequireMainAdmin>
+          }
+        />
 
         <Route
           path='/contributions'
