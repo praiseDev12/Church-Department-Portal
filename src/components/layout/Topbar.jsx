@@ -42,7 +42,7 @@ export default function Topbar({ onMenuClick }) {
         </button>
         <div className='text-right'>
           <p className='text-xs font-medium text-brand dark:text-brand-200 lg:text-sm'>
-            {user?.fullName}
+            {user?.fullName?.split(' ')[0] || 'User'}
           </p>
           <p className='text-[10px] text-zinc-500 dark:text-zinc-400 lg:text-xs'>
             {user?.role === 'main_admin' ? 'Main Admin' : 'Unit Admin'}

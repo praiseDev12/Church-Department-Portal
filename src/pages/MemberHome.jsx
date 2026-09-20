@@ -27,7 +27,7 @@ export default function MemberHome() {
       />
 
       <h1 className='font-display text-2xl font-semibold text-zinc-900 dark:text-white'>
-        Welcome, {user?.fullName}
+        Welcome, {user?.fullName?.split(' ')[0] || 'User'}!
       </h1>
     </div>
   );
