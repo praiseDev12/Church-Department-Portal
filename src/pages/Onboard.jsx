@@ -146,7 +146,7 @@ export default function Onboard() {
       </div>
 
       {/* Form panel */}
-      <div className='flex flex-1 items-center justify-center py-10 px-4 sm:px-8'>
+      <div className='flex flex-1 z-10 items-center justify-center py-10 px-4 sm:px-8'>
         <div className='w-full max-w-lg'>
           <div className='lg:hidden flex-center gap-3 mb-5'>
             <BrandLockup variant='light' />
