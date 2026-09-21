@@ -86,7 +86,7 @@ function ActionsMenu({
   };
 
   return (
-    <div className='absolute'>
+    <div className='relative'>
       <button
         type='button'
         onClick={(e) => {
@@ -114,7 +114,7 @@ function ActionsMenu({
           />
 
           <div
-            className='absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-xl shadow-zinc-900/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/30'
+            className='absolute right-5 top-full lg:-top-10 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-xl shadow-zinc-900/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/30'
             onClick={(e) => e.stopPropagation()}
           >
             {/* Edit */}
@@ -570,6 +570,102 @@ function MemberDetails({ member }) {
   );
 }
 
+function MobileMemberRow({
+  member,
+  isExpanded,
+  onToggle,
+  onEdit,
+  onChangeUnit,
+  onChangeStatus,
+  onChangeRole,
+  onDelete,
+  showRoleAction,
+}) {
+  const initials = member.fullName
+    ?.split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((name) => name[0])
+    .join('')
+    .toUpperCase();
+
+  return (
+    <div className='border-b border-zinc-100 last:border-b-0 dark:border-zinc-800'>
+      <div
+        onClick={onToggle}
+        className={`flex min-w-0 cursor-pointer items-center gap-3 px-3 py-3.5 transition-colors ${
+          isExpanded
+            ? 'bg-zinc-50 dark:bg-zinc-800/40'
+            : 'hover:bg-zinc-50 dark:hover:bg-zinc-800/30'
+        }`}
+      >
+        {/* Avatar */}
+        {member.photoUrl ? (
+          <img
+            src={member.photoUrl}
+            alt=''
+            className='h-11 w-11 shrink-0 rounded-xl object-cover'
+          />
+        ) : (
+          <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-400'>
+            {initials || '?'}
+          </div>
+        )}
+
+        {/* Member information */}
+        <div className='min-w-0 flex-1'>
+          <div className='flex min-w-0 items-center gap-2'>
+            <p className='min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-white'>
+              {member.fullName}
+            </p>
+          </div>
+
+          <div className='mt-1 flex min-w-0 items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400'>
+            <span className='truncate'>
+              {member.unit?.name || 'Unassigned'}
+            </span>
+
+            {member.phoneNumber && (
+              <>
+                <span className='shrink-0'>·</span>
+                <span className='shrink-0'>{member.phoneNumber}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Expand */}
+        <ChevronRight
+          size={18}
+          className={`shrink-0 text-zinc-400 transition-transform duration-200 ${
+            isExpanded ? 'rotate-90' : ''
+          }`}
+        />
+
+        {/* Actions */}
+        <div className='relative shrink-0' onClick={(e) => e.stopPropagation()}>
+          <ActionsMenu
+            member={member}
+            onEdit={onEdit}
+            onChangeUnit={onChangeUnit}
+            onChangeStatus={onChangeStatus}
+            onChangeRole={onChangeRole}
+            onDelete={onDelete}
+            showRoleAction={showRoleAction}
+          />
+        </div>
+      </div>
+
+      {/* Expanded details */}
+      {isExpanded && (
+        <div className='border-t border-zinc-100 bg-zinc-50/50 px-3 py-4 dark:border-zinc-800 dark:bg-zinc-950/30'>
+          <MemberDetails member={member} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MemberRow({
   member,
   isExpanded,
@@ -626,7 +722,7 @@ function MemberRow({
         </td>
 
         {/* Member */}
-        <td className='px-2 py-4 sm:px-3'>
+        <td className='min-w-0 px-2 py-4 sm:px-3'>
           <div className='flex min-w-0 items-center gap-3'>
             {member.photoUrl ? (
               <img
@@ -678,7 +774,7 @@ function MemberRow({
         </td>
 
         {/* Status */}
-        <td className='hidden lg:block px-2 py-4 sm:px-3'>
+        <td className='hidden px-2 py-4 lg:table-cell sm:px-3'>
           <StatusBadge status={member.status} />
         </td>
 
@@ -892,14 +988,6 @@ export default function Members() {
             Manage and view your department members
           </p>
         </div>
-
-        {/* <div className='flex w-full gap-2 sm:w-auto'>
-          <Button variant='secondary' className='flex-1 sm:flex-none'>
-            Import CSV
-          </Button>
-
-          <Button className='flex-1 sm:flex-none'>Add member</Button>
-        </div> */}
       </div>
 
       {/* Search */}
@@ -936,7 +1024,7 @@ export default function Members() {
       )}
 
       {/* Members table */}
-      <Card className='w-full min-w-0 overflow-hidden border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900'>
+      <Card className='w-full min-w-0 border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900'>
         {loading ? (
           <LoadingState />
         ) : error ? (
@@ -944,62 +1032,87 @@ export default function Members() {
         ) : members.length === 0 ? (
           <EmptyState search={search} />
         ) : (
-          <div className='w-full min-w-0 overflow-x-hidden'>
-            <table className='w-full text-left text-sm'>
-              <thead>
-                <tr className='border-b border-zinc-200 bg-zinc-50/70 dark:border-zinc-800 dark:bg-zinc-800/40'>
-                  <th className='w-10 px-2 py-3.5 sm:px-3'>
-                    <span className='sr-only'>Expand</span>
-                  </th>
+          <>
+            {/* Mobile members list */}
+            <div className='md:hidden'>
+              {members.map((member) => {
+                const isExpanded = expandedMemberId === member._id;
 
-                  <th className='px-2 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 sm:px-3'>
-                    Member
-                  </th>
+                return (
+                  <MobileMemberRow
+                    key={member._id}
+                    member={member}
+                    isExpanded={isExpanded}
+                    onToggle={() => toggleMember(member._id)}
+                    onEdit={() => handleEdit(member)}
+                    onChangeUnit={() => handleChangeUnit(member)}
+                    onChangeStatus={() => handleChangeStatus(member)}
+                    onChangeRole={() => handleChangeRole(member)}
+                    onDelete={() => handleDeleteRequest(member)}
+                    showRoleAction={isMainAdmin}
+                  />
+                );
+              })}
+            </div>
 
-                  <th className='hidden px-5 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 sm:table-cell'>
-                    Unit
-                  </th>
+            {/* Desktop members table */}
+            <div className='hidden w-full min-w-0 md:block'>
+              <table className='w-full table-fixed text-left text-sm'>
+                <thead>
+                  <tr className='border border-zinc-200 bg-zinc-50/70 dark:border-zinc-800 dark:bg-zinc-800/40'>
+                    <th className='w-10 px-2 py-3.5 sm:px-3'>
+                      <span className='sr-only'>Expand</span>
+                    </th>
 
-                  <th className='hidden px-5 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 md:table-cell'>
-                    Phone
-                  </th>
+                    <th className='w-[30%] px-2 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 sm:px-3'>
+                      Member
+                    </th>
 
-                  <th className='hidden px-5 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 lg:table-cell'>
-                    Joined
-                  </th>
+                    <th className='w-[18%] px-4 py-3.5 font-medium text-zinc-500 dark:text-zinc-400'>
+                      Unit
+                    </th>
 
-                  <th className='hidden lg:block px-2 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 sm:px-3'>
-                    Status
-                  </th>
+                    <th className='w-[18%] px-4 py-3.5 font-medium text-zinc-500 dark:text-zinc-400'>
+                      Phone
+                    </th>
 
-                  <th className='w-10 px-2 py-3.5 sm:px-3'>
-                    <span className='sr-only'>Actions</span>
-                  </th>
-                </tr>
-              </thead>
+                    <th className='w-[14%] px-4 py-3.5 font-medium text-zinc-500 dark:text-zinc-400'>
+                      Joined
+                    </th>
 
-              <tbody>
-                {members.map((member) => {
-                  const isExpanded = expandedMemberId === member._id;
+                    <th className='w-[14%] px-2 py-3.5 font-medium text-zinc-500 dark:text-zinc-400 sm:px-3'>
+                      Status
+                    </th>
 
-                  return (
-                    <MemberRow
-                      key={member._id}
-                      member={member}
-                      isExpanded={isExpanded}
-                      onToggle={() => toggleMember(member._id)}
-                      onEdit={() => handleEdit(member)}
-                      onChangeUnit={() => handleChangeUnit(member)}
-                      onChangeStatus={() => handleChangeStatus(member)}
-                      onChangeRole={() => handleChangeRole(member)}
-                      onDelete={() => handleDeleteRequest(member)}
-                      showRoleAction={isMainAdmin}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                    <th className='w-10 px-2 py-3.5 sm:px-3'>
+                      <span className='sr-only'>Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {members.map((member) => {
+                    const isExpanded = expandedMemberId === member._id;
+
+                    return (
+                      <MemberRow
+                        key={member._id}
+                        member={member}
+                        isExpanded={isExpanded}
+                        onToggle={() => toggleMember(member._id)}
+                        onEdit={() => handleEdit(member)}
+                        onChangeUnit={() => handleChangeUnit(member)}
+                        onChangeStatus={() => handleChangeStatus(member)}
+                        onChangeRole={() => handleChangeRole(member)}
+                        onDelete={() => handleDeleteRequest(member)}
+                        showRoleAction={isMainAdmin}
+                      />
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
 
         {!loading && !error && pagination.totalMembers > 0 && (
