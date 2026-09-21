@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -709,8 +710,21 @@ function MemberRow({
 
 export default function Members() {
   const { isMainAdmin } = useAuth();
-  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = searchParams.get('search') || '';
+  const page = Math.max(Number(searchParams.get('page')) || 1, 1);
+
+  const limit = 20;
+
   const [members, setMembers] = useState([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 20,
+    totalMembers: 0,
+    totalPages: 0,
+  });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedMemberId, setExpandedMemberId] = useState(null);
@@ -732,10 +746,21 @@ export default function Members() {
 
         const data = await getMembers({
           search,
+          page,
+          limit,
         });
 
         if (!cancelled) {
           setMembers(data.members || []);
+
+          setPagination(
+            data.pagination || {
+              page,
+              limit,
+              totalMembers: 0,
+              totalPages: 0,
+            },
+          );
         }
       } catch (err) {
         if (!cancelled) {
@@ -753,10 +778,41 @@ export default function Members() {
     return () => {
       cancelled = true;
     };
-  }, [search]);
+  }, [search, page, limit]);
 
   const toggleMember = (memberId) => {
     setExpandedMemberId((current) => (current === memberId ? null : memberId));
+  };
+
+  const goToPage = (nextPage) => {
+    const safePage = Math.max(
+      1,
+      Math.min(nextPage, pagination.totalPages || 1),
+    );
+
+    setSearchParams((current) => {
+      const params = new URLSearchParams(current);
+
+      if (safePage === 1) {
+        params.delete('page');
+      } else {
+        params.set('page', String(safePage));
+      }
+
+      return params;
+    });
+  };
+
+  const goToPreviousPage = () => {
+    if (page > 1) {
+      goToPage(page - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (page < pagination.totalPages) {
+      goToPage(page + 1);
+    }
   };
 
   function patchMember(updatedMember) {
@@ -852,7 +908,23 @@ export default function Members() {
           type='search'
           placeholder='Search members...'
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+
+            setSearchParams((current) => {
+              const params = new URLSearchParams(current);
+
+              if (value.trim()) {
+                params.set('search', value);
+              } else {
+                params.delete('search');
+              }
+
+              params.set('page', '1');
+
+              return params;
+            });
+          }}
           className='w-full max-w-sm rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-zinc-700 dark:bg-zinc-800'
         />
       </div>
@@ -927,6 +999,64 @@ export default function Members() {
                 })}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {!loading && !error && pagination.totalMembers > 0 && (
+          <div className='flex flex-col gap-3 border-t border-zinc-200 px-4 py-4 dark:border-zinc-800 sm:flex-row sm:items-center sm:justify-between'>
+            <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+              Showing{' '}
+              <span className='font-medium text-zinc-700 dark:text-zinc-200'>
+                {(page - 1) * limit + 1}
+              </span>{' '}
+              to{' '}
+              <span className='font-medium text-zinc-700 dark:text-zinc-200'>
+                {Math.min(page * limit, pagination.totalMembers)}
+              </span>{' '}
+              of{' '}
+              <span className='font-medium text-zinc-700 dark:text-zinc-200'>
+                {pagination.totalMembers}
+              </span>{' '}
+              members
+            </p>
+
+            <div className='flex items-center gap-1'>
+              <button
+                type='button'
+                onClick={goToPreviousPage}
+                disabled={page === 1}
+                className='rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
+              >
+                Previous
+              </button>
+
+              {Array.from(
+                { length: pagination.totalPages },
+                (_, index) => index + 1,
+              ).map((pageNumber) => (
+                <button
+                  key={pageNumber}
+                  type='button'
+                  onClick={() => goToPage(pageNumber)}
+                  className={`hidden h-9 min-w-9 items-center justify-center rounded-lg px-2 text-sm font-medium transition sm:flex ${
+                    pageNumber === page
+                      ? 'bg-brand-500 text-white'
+                      : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              ))}
+
+              <button
+                type='button'
+                onClick={goToNextPage}
+                disabled={page >= pagination.totalPages}
+                className='rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800'
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </Card>

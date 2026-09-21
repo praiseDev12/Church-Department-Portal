@@ -1,15 +1,18 @@
 import { apiFetch } from '../lib/api.js';
 
-export function getMembers({ search = '' } = {}) {
+export function getMembers({ search = '', page = 1, limit = 20 } = {}) {
   const params = new URLSearchParams();
 
   if (search.trim()) {
     params.set('search', search.trim());
   }
 
+  params.set('page', page);
+  params.set('limit', limit);
+
   const query = params.toString();
 
-  return apiFetch(`/members${query ? `?${query}` : ''}`);
+  return apiFetch(`/members?${query}`);
 }
 
 export function getMember(memberId) {
