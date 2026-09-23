@@ -69,7 +69,8 @@ function getImageFormat(dataUrl) {
   return 'PNG';
 }
 
-export async function exportContributionPdf(contribution) {
+export async function exportContributionPdf(contribution, departmentName) {
+  console.log(contribution);
   const doc = new jsPDF();
 
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -105,6 +106,12 @@ export async function exportContributionPdf(contribution) {
    * ─────────────────────────────────────
    */
 
+  /*
+   * ─────────────────────────────────────
+   * Header
+   * ─────────────────────────────────────
+   */
+
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
 
@@ -123,10 +130,19 @@ export async function exportContributionPdf(contribution) {
     align: 'center',
   });
 
+  // Department name
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+
+  doc.text(departmentName || 'Department', pageWidth / 2, 56, {
+    align: 'center',
+  });
+
+  // Contribution title
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
 
-  doc.text(contribution.title || 'Contribution Record', pageWidth / 2, 63, {
+  doc.text(contribution.title || 'Contribution Record', pageWidth / 2, 67, {
     align: 'center',
   });
 
@@ -139,9 +155,9 @@ export async function exportContributionPdf(contribution) {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
 
-  doc.text(`Recorded: ${formatDate(contribution.createdAt)}`, 14, 76);
+  doc.text(`Recorded: ${formatDate(contribution.createdAt)}`, 14, 80);
 
-  doc.text(`Contributors: ${contribution.entries?.length || 0}`, 14, 83);
+  doc.text(`Contributors: ${contribution.entries?.length || 0}`, 14, 87);
 
   /*
    * ─────────────────────────────────────

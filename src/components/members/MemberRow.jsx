@@ -119,12 +119,12 @@ function MemberRow({
         </td>
 
         {/* Joined */}
-        <td className='hidden px-5 py-4 text-zinc-600 dark:text-zinc-300 lg:table-cell'>
+        <td className='hidden text-[10px] md:text-xs lg:text-sm text-nowrap px-5 py-4 text-zinc-600 dark:text-zinc-300 md:table-cell'>
           {joinedDate}
         </td>
 
         {/* Status */}
-        <td className='hidden px-2 py-4 lg:table-cell sm:px-3'>
+        <td className='hidden px-2 py-4 md:table-cell sm:px-3'>
           <StatusBadge status={member.status} />
         </td>
 

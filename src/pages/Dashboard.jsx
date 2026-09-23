@@ -43,7 +43,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className='flex flex-col gap-6 dark:text-white'>
+    <div className='flex flex-col gap-6 dark:text-white px-3 py-2'>
       <div>
         <h1 className='font-display text-2xl font-semibold'>
           Welcome{user?.name ? `, ${user.name}` : ''}

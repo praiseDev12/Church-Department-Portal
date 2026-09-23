@@ -19,7 +19,7 @@ function formatDate(date) {
   });
 }
 
-export async function exportContributionImage(contribution) {
+export async function exportContributionImage(contribution, departmentName) {
   const entries = contribution.entries || [];
 
   const totalAmount = Number(contribution.totalAmount || 0);
@@ -73,6 +73,14 @@ export async function exportContributionImage(contribution) {
         margin-top: 3px;
       ">
         Asaba HQ
+      </div>
+
+      <div style="
+        font-size: 17px;
+        font-weight: 700;
+        margin-top: 16px;
+      ">
+        ${escapeHtml(departmentName || 'Department')}
       </div>
 
       <div style="

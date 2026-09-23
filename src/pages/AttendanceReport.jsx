@@ -108,7 +108,7 @@ export default function AttendanceReport() {
   }
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-4 px-3 py-2'>
       <div>
         <h1 className='font-display text-2xl font-semibold text-zinc-900 dark:text-white'>
           {data.session.serviceName}

@@ -536,7 +536,7 @@ export default function Units() {
   };
 
   return (
-    <div className='flex min-w-0 flex-col gap-4'>
+    <div className='flex min-w-0 flex-col gap-4 px-3 py-2'>
       {/* Header */}
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <div>

@@ -1,5 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+
+import { useAuth } from '../context/AuthContext.jsx';
+
 import {
   ChevronDown,
   ChevronUp,
@@ -69,6 +72,10 @@ function ActionMenuItem({ icon: Icon, children, onClick, danger = false }) {
 }
 
 export default function Contributions() {
+  const { user } = useAuth();
+
+  const departmentName = user?.department?.name || 'Department';
+
   // State variables
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -476,12 +483,12 @@ export default function Contributions() {
   }
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-4 px-3 py-2'>
       <div className='flex items-center justify-between gap-3'>
         <div>
           <h1 className='font-display text-2xl font-semibold'>Contributions</h1>
 
-          <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+          <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
             Historical records of member contributions
           </p>
         </div>
@@ -489,6 +496,7 @@ export default function Contributions() {
         <Button
           type='button'
           onClick={() => setShowCreateForm((current) => !current)}
+          className='text-[10px] text-nowrap'
         >
           <Plus size={18} />
           Add Record
@@ -803,7 +811,10 @@ export default function Contributions() {
                               icon={FileDown}
                               onClick={() => {
                                 setOpenActionMenu(null);
-                                exportContributionPdf(contribution);
+                                exportContributionPdf(
+                                  contribution,
+                                  departmentName,
+                                );
                               }}
                             >
                               Export PDF
@@ -813,7 +824,10 @@ export default function Contributions() {
                               icon={ImageDown}
                               onClick={() => {
                                 setOpenActionMenu(null);
-                                exportContributionImage(contribution);
+                                exportContributionImage(
+                                  contribution,
+                                  departmentName,
+                                );
                               }}
                             >
                               Export Image
