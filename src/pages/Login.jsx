@@ -27,7 +27,7 @@ const whatYouCanDo = [
 ];
 
 export default function Login() {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,6 +36,12 @@ export default function Login() {
 
   useEffect(() => {
     document.title = 'Login';
+
+    if (user) {
+      navigate(user.role === 'member' ? '/portal' : '/', {
+        replace: true,
+      });
+    }
   }, []);
 
   async function handleSubmit(e) {
