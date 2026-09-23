@@ -129,15 +129,17 @@ function ActionsMenu({
             </button>
 
             {/* Change unit */}
-            <button
-              type='button'
-              onClick={() => handleAction(onChangeUnit)}
-              className='flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-800'
-            >
-              <ArrowRightLeft size={16} className='shrink-0 text-zinc-400' />
+            {showRoleAction && (
+              <button
+                type='button'
+                onClick={() => handleAction(onChangeUnit)}
+                className='flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-50 dark:text-zinc-200 dark:hover:bg-zinc-800'
+              >
+                <ArrowRightLeft size={16} className='shrink-0 text-zinc-400' />
 
-              <span>Change unit</span>
-            </button>
+                <span>Change unit</span>
+              </button>
+            )}
 
             {/* Change status */}
             <button
@@ -570,6 +572,43 @@ function MemberDetails({ member }) {
   );
 }
 
+function PhotoPreviewModal({ member, onClose }) {
+  if (!member?.photoUrl) return null;
+
+  return (
+    <div
+      className='fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4'
+      onClick={onClose}
+    >
+      <div
+        className='relative max-h-[90vh] max-w-[90vw]'
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type='button'
+          onClick={onClose}
+          className='absolute hover:text-red-500 right-2 top-2 z-10 flex-center h-9 w-9 rounded-full bg-black/60 text-xl text-white transition hover:bg-black/80'
+          aria-label='Close image preview'
+        >
+          ×
+        </button>
+
+        <img
+          src={member.photoUrl}
+          alt={member.fullName}
+          className='max-h-[85vh] max-w-[90vw] rounded-xl object-contain shadow-2xl'
+        />
+
+        <div className='mt-3 text-center border border-dashed border-gray-500 p-2 rounded-md'>
+          <p className='text-[10px] lg:text-xs font-medium text-gray-500'>
+            {member.fullName}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MobileMemberRow({
   member,
   isExpanded,
@@ -580,6 +619,7 @@ function MobileMemberRow({
   onChangeRole,
   onDelete,
   showRoleAction,
+  onPhotoClick,
 }) {
   const initials = member.fullName
     ?.split(' ')
@@ -601,11 +641,21 @@ function MobileMemberRow({
       >
         {/* Avatar */}
         {member.photoUrl ? (
-          <img
-            src={member.photoUrl}
-            alt=''
-            className='h-11 w-11 shrink-0 rounded-xl object-cover'
-          />
+          <button
+            type='button'
+            onClick={(e) => {
+              e.stopPropagation();
+              onPhotoClick(member);
+            }}
+            className='shrink-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/40'
+            aria-label={`View photo of ${member.fullName}`}
+          >
+            <img
+              src={member.photoUrl}
+              alt={member.fullName}
+              className='h-11 w-11 rounded-xl object-cover transition-transform hover:scale-105'
+            />
+          </button>
         ) : (
           <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-400'>
             {initials || '?'}
@@ -676,6 +726,7 @@ function MemberRow({
   onChangeRole,
   onDelete,
   showRoleAction,
+  onPhotoClick,
 }) {
   const initials = member.fullName
     ?.split(' ')
@@ -725,11 +776,21 @@ function MemberRow({
         <td className='min-w-0 px-2 py-4 sm:px-3'>
           <div className='flex min-w-0 items-center gap-3'>
             {member.photoUrl ? (
-              <img
-                src={member.photoUrl}
-                alt=''
-                className='h-10 w-10 shrink-0 rounded-xl object-cover'
-              />
+              <button
+                type='button'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPhotoClick(member);
+                }}
+                className='shrink-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/40'
+                aria-label={`View photo of ${member.fullName}`}
+              >
+                <img
+                  src={member.photoUrl}
+                  alt={member.fullName}
+                  className='h-10 w-10 rounded-xl object-cover transition-transform hover:scale-105'
+                />
+              </button>
             ) : (
               <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-400'>
                 {initials || '?'}
@@ -824,6 +885,7 @@ export default function Members() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedMemberId, setExpandedMemberId] = useState(null);
+  const [previewMember, setPreviewMember] = useState(null);
 
   const [editingMember, setEditingMember] = useState(null);
   const [unitChangeMember, setUnitChangeMember] = useState(null);
@@ -1050,6 +1112,7 @@ export default function Members() {
                     onChangeRole={() => handleChangeRole(member)}
                     onDelete={() => handleDeleteRequest(member)}
                     showRoleAction={isMainAdmin}
+                    onPhotoClick={setPreviewMember}
                   />
                 );
               })}
@@ -1106,6 +1169,7 @@ export default function Members() {
                         onChangeRole={() => handleChangeRole(member)}
                         onDelete={() => handleDeleteRequest(member)}
                         showRoleAction={isMainAdmin}
+                        onPhotoClick={setPreviewMember}
                       />
                     );
                   })}
@@ -1196,6 +1260,13 @@ export default function Members() {
           member={unitChangeMember}
           onClose={() => setUnitChangeMember(null)}
           onSaved={handleMemberSaved}
+        />
+      )}
+
+      {previewMember && (
+        <PhotoPreviewModal
+          member={previewMember}
+          onClose={() => setPreviewMember(null)}
         />
       )}
 
