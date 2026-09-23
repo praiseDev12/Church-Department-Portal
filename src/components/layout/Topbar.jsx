@@ -21,7 +21,7 @@ export default function Topbar({ onMenuClick }) {
           <Menu size={20} />
         </button>
 
-        <p className='truncate text-sm text-zinc-500 dark:text-zinc-400'>
+        <p className='truncate text-[10px] md:text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
           {user?.department?.name
             ? `${user.department.name} Department`
             : 'Department'}
@@ -44,7 +44,7 @@ export default function Topbar({ onMenuClick }) {
           <p className='text-xs font-medium text-brand dark:text-brand-200 lg:text-sm'>
             {user?.fullName?.split(' ')[0] || 'User'}
           </p>
-          <p className='text-[10px] text-zinc-500 dark:text-zinc-400 lg:text-xs'>
+          <p className='text-[7px] text-zinc-500 dark:text-zinc-400 lg:text-xs'>
             {user?.role === 'main_admin' ? 'Main Admin' : 'Unit Admin'}
           </p>
         </div>

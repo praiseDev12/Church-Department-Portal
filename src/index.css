@@ -17,7 +17,6 @@
   --color-brand-800: #001c5c;
   --color-brand-900: #00113d;
   --color-brand: #003599;
-
   /* Distinct display face for headings, kept restrained */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
   /* Neutral, highly legible body face for dense record data — overrides default sans */
