@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CalendarCheck, CalendarDays, Clock3 } from 'lucide-react';
 
-import { getMyAttendance } from '../services/checkinService.js';
+import { getMyAttendance } from '../services/checkInService.js';
 
 export default function MemberAttendance() {
   const [attendance, setAttendance] = useState([]);

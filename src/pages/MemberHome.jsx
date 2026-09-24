@@ -13,7 +13,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 import PhotoUpload from '../components/members/PhotoUpload.jsx';
 
-import { getMyAttendance } from '../services/checkinService.js';
+import { getMyAttendance } from '../services/checkInService.js';
 import { getMyContributions } from '../services/contributionService.js';
 
 export default function MemberHome() {
