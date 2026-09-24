@@ -5,15 +5,16 @@ export default function BrandLockup({ variant = 'dark' }) {
     variant === 'dark'
       ? 'text-brand-400 text-[10px] lg:text-xs font-bold'
       : 'text-brand-500 dark:text-brand-400 text-[10px] lg:text-xs font-bold';
+
   const subtitleClass =
     variant === 'dark'
       ? 'relative font-display text-[7px] lg:text-[10px] font-semibold text-white lg:-mt-1'
-      : 'relative font-display text-[7px] lg:text-[10px] font-semibold lg:-mt-1';
+      : 'relative font-display text-[7px] lg:text-[10px] font-semibold text-black lg:-mt-1';
 
   const locationClass =
     variant === 'dark'
-      ? 'text-[7px] text-brand-50 text-left'
-      : 'text-[7px] text-brand-500 dark:text-brand-50 text-left';
+      ? 'text-[7px] text-brand-100 text-left'
+      : 'text-[7px] text-brand-900 dark:text-brand-50 text-left';
 
   return (
     <div className='flex items-center gap-3'>

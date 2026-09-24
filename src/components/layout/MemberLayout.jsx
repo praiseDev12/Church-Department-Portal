@@ -13,6 +13,7 @@ import {
   CalendarCheck,
   UserCircle,
 } from 'lucide-react';
+import BrandLockup from '../ui/BrandLockup.jsx';
 
 const navItems = [
   { to: '/portal', label: 'Home', end: true, icon: Home },
@@ -30,10 +31,8 @@ export default function MemberLayout() {
 
   return (
     <div className='flex min-h-screen flex-col bg-white dark:bg-zinc-950'>
-      <header className='flex items-center justify-between gap-2 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800 sm:px-6'>
-        <p className='truncate font-display text-base font-semibold text-brand-500 dark:text-brand-300 sm:text-lg'>
-          Department Portal
-        </p>
+      <header className='flex items-center justify-between sticky top-0 gap-2 backdrop-blur-2xl z-100 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800 sm:px-6'>
+        <BrandLockup variant={theme} />
 
         <div className='flex items-center gap-1.5 sm:gap-2'>
           {isAdmin && (

@@ -66,3 +66,7 @@ export async function deleteContribution(contributionId) {
     method: 'DELETE',
   });
 }
+
+export async function getMyContributions() {
+  return apiFetch('/contributions/my-contributions');
+}

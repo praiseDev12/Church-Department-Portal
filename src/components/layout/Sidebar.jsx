@@ -19,6 +19,7 @@ import {
 import { useAuth } from '../../context/AuthContext.jsx';
 
 import BrandLockup from '../ui/BrandLockup.jsx';
+import { useTheme } from '../../context/ThemeContext.jsx';
 
 const linkBase =
   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors';
@@ -101,6 +102,7 @@ export default function Sidebar({
   onToggleCollapse,
 }) {
   const { isMainAdmin, logout } = useAuth();
+  const { theme } = useTheme();
 
   const visibleNavItems = navItems.filter(
     (item) => !item.mainAdminOnly || isMainAdmin,
@@ -124,7 +126,7 @@ export default function Sidebar({
       >
         {/* Header */}
         <div className='mb-6 flex items-center justify-between px-2'>
-          <BrandLockup variant='light' />
+          <BrandLockup variant={theme} />
 
           <button
             type='button'
@@ -193,7 +195,7 @@ export default function Sidebar({
           ) : (
             <>
               <div className='px-2'>
-                <BrandLockup variant='light' />
+                <BrandLockup variant={theme} />
               </div>
 
               <button
