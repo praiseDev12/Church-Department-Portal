@@ -123,7 +123,7 @@ export default function MemberHome() {
               onUploaded={handlePhotoUploaded}
             />
 
-            <div className='w-full'>
+            <div className='max-md:w-full'>
               <p className='text-sm text-zinc-500 dark:text-zinc-400'>
                 Welcome back
               </p>
