@@ -32,6 +32,11 @@ const whatYouCanDo = [
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
+
+  const [departments, setDepartments] = useState([]);
+  const [department, setDepartment] = useState('');
+  const [departmentsLoading, setDepartmentsLoading] = useState(true);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,18 +45,52 @@ export default function ForgotPassword() {
     document.title = 'Forgot Password';
   }, []);
 
+  useEffect(() => {
+    async function loadDepartments() {
+      try {
+        const data = await apiFetch('/public/departments');
+        const departmentList = data.departments || [];
+
+        setDepartments(departmentList);
+
+        const lastDepartment = localStorage.getItem('lastDepartment');
+
+        if (
+          lastDepartment &&
+          departmentList.some((dept) => dept._id === lastDepartment)
+        ) {
+          setDepartment(lastDepartment);
+        }
+      } catch (err) {
+        console.error('Failed to load departments:', err);
+        setError('Unable to load departments. Please refresh the page.');
+      } finally {
+        setDepartmentsLoading(false);
+      }
+    }
+
+    loadDepartments();
+  }, []);
+
   async function handleSubmit(e) {
     e.preventDefault();
 
     setError('');
     setSuccess('');
+
+    if (!department) {
+      setError('Please select your department.');
+      return;
+    }
     setLoading(true);
 
     try {
       const data = await apiFetch('/auth/forgot-password', {
         method: 'POST',
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, department }),
       });
+
+      localStorage.setItem('lastDepartment', department);
 
       setSuccess(
         data.message ||
@@ -142,6 +181,36 @@ export default function ForgotPassword() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+
+            <div>
+              <label
+                htmlFor='department'
+                className='mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+              >
+                Department
+              </label>
+
+              <select
+                id='department'
+                required
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                disabled={departmentsLoading}
+                className='w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white'
+              >
+                <option value=''>
+                  {departmentsLoading
+                    ? 'Loading departments...'
+                    : 'Select your department'}
+                </option>
+
+                {departments.map((dept) => (
+                  <option key={dept._id} value={dept._id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {error && (
               <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>

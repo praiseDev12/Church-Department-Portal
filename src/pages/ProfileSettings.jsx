@@ -138,6 +138,7 @@ export default function ProfileSettings() {
           currentPhotoUrl={photoUrl}
           name={user?.fullName}
           onUploaded={handlePhotoUploaded}
+          editable
         />
       </div>
 
