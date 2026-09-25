@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
+
+import { initializeMessaging } from '../../lib/messaging.js';
+
+import NotificationPrompt from '../notifications/NotificationPrompt.jsx';
+
 import {
   LogOut,
   MoonIcon,
@@ -12,12 +17,18 @@ import {
   Home,
   CalendarCheck,
   UserCircle,
+  Bell,
 } from 'lucide-react';
 import BrandLockup from '../ui/BrandLockup.jsx';
 
 const navItems = [
   { to: '/portal', label: 'Home', end: true, icon: Home },
   { to: '/check-in', label: 'Check-In', icon: CalendarCheck },
+  {
+    to: '/member/announcements',
+    label: 'Announcements',
+    icon: Bell,
+  },
   { to: '/profile', label: 'Profile', icon: UserCircle },
 ];
 
@@ -28,6 +39,10 @@ export default function MemberLayout() {
   const { isAdmin, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    initializeMessaging();
+  }, []);
 
   return (
     <div className='flex min-h-screen flex-col bg-white dark:bg-zinc-950'>
@@ -125,6 +140,8 @@ export default function MemberLayout() {
       <main className='flex-1 px-4 py-6 sm:px-6 sm:py-8'>
         <Outlet />
       </main>
+
+      <NotificationPrompt />
     </div>
   );
 }

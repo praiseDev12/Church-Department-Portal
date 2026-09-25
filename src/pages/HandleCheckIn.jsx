@@ -144,10 +144,10 @@ export default function HandleCheckIn() {
     setForm({
       name: service.name || '',
       dayOfWeek: String(service.dayOfWeek ?? ''),
-      startTime: service.startTime || '',
-      openBeforeMinutes: service.openBeforeMinutes ?? 60,
-      closeAfterMinutes: service.closeAfterMinutes ?? 60,
-      graceMinutes: service.graceMinutes ?? 15,
+      startTime: service?.startTime || '',
+      openBeforeMinutes: service?.openBeforeMinutes ?? 60,
+      closeAfterMinutes: service?.closeAfterMinutes ?? 60,
+      graceMinutes: service?.graceMinutes ?? 15,
     });
 
     setServiceError('');
@@ -219,7 +219,7 @@ export default function HandleCheckIn() {
       const payload = {
         name: form.name.trim(),
         dayOfWeek: Number(form.dayOfWeek),
-        startTime: form.startTime,
+        startTime: form?.startTime,
         openBeforeMinutes: Number(form.openBeforeMinutes),
         closeAfterMinutes: Number(form.closeAfterMinutes),
         graceMinutes: Number(form.graceMinutes),
@@ -536,8 +536,8 @@ export default function HandleCheckIn() {
                         </h3>
 
                         <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
-                          {formatDay(service.dayOfWeek)} at{' '}
-                          {formatTime(service.startTime)}
+                          {formatDay(service?.dayOfWeek)} at{' '}
+                          {formatTime(service?.startTime)}
                         </p>
                       </div>
 
@@ -674,7 +674,7 @@ export default function HandleCheckIn() {
               label='Start time'
               type='time'
               required
-              value={form.startTime}
+              value={form?.startTime}
               onChange={handleFormChange('startTime')}
             />
           </div>

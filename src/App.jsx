@@ -39,6 +39,8 @@ import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import MemberContributions from './pages/MemberContributions.jsx';
 import MemberAttendance from './pages/MembersAttendance.jsx';
+import Announcements from './pages/Announcement.jsx';
+import MemberAnnouncements from './pages/MemberAnnouncements.jsx';
 
 // Checks for authentication and admin privileges
 function RequireAdmin({ children }) {
@@ -110,6 +112,7 @@ export default function App() {
         <Route path='/profile' element={<ProfileSettings />} />
         <Route path='/portal/contributions' element={<MemberContributions />} />
         <Route path='/portal/attendance' element={<MemberAttendance />} />
+        <Route path='/member/announcements' element={<MemberAnnouncements />} />
         <Route path='/profile' element={<ProfileSettings />} />
       </Route>
 
@@ -136,6 +139,8 @@ export default function App() {
         <Route path='/' element={<Dashboard />} />
 
         <Route path='/members' element={<Members />} />
+
+        <Route path='/announcements' element={<Announcements />} />
 
         <Route path='/attendance' element={<AttendanceReport />} />
 

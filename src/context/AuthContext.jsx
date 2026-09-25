@@ -8,6 +8,8 @@ import {
 import { loadSession, saveSession, clearSession } from '../lib/session.js';
 import { useNavigate } from 'react-router-dom';
 
+import { requestNotificationPermission } from '../lib/messaging.js';
+
 const AuthContext = createContext(null);
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 

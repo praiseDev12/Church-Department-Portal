@@ -1,4 +1,4 @@
-const SESSION_KEY = "cdp_session";
+const SESSION_KEY = 'cdp_session';
 
 // Stores { token, user } together — previously only `user` was saved,
 // which meant the token was discarded and no request could authenticate.

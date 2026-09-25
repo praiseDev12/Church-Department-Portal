@@ -14,6 +14,7 @@ import {
   Building2,
   PanelLeftClose,
   ChevronsRight,
+  Bell,
 } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -57,6 +58,12 @@ const navItems = [
     label: 'Attendance',
     mainAdminOnly: false,
     icon: CalendarCheck,
+  },
+  {
+    to: '/announcements',
+    label: 'Announcement',
+    mainAdminOnly: true,
+    icon: Bell,
   },
   {
     to: '/contributions',
