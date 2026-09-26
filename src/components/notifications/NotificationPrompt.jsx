@@ -45,11 +45,11 @@ export default function NotificationPrompt() {
         <div className='min-w-0 flex-1'>
           <div className='flex items-start justify-between gap-2'>
             <div>
-              <h3 className='font-semibold text-zinc-900 dark:text-white'>
+              <h3 className='font-semibold text-sm lg:text-lg text-zinc-900 dark:text-white'>
                 Stay updated
               </h3>
 
-              <p className='mt-1 text-sm text-zinc-600 dark:text-zinc-400'>
+              <p className='mt-1 text-xs lg:text-sm text-zinc-600 dark:text-zinc-400'>
                 Get notifications about church announcements, services, and
                 important updates.
               </p>
@@ -70,7 +70,7 @@ export default function NotificationPrompt() {
               type='button'
               onClick={handleEnable}
               disabled={loading}
-              className='rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60'
+              className='rounded-lg bg-brand-500 px-4 py-2 text-xs lg:text-sm font-medium text-white hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60'
             >
               {loading ? 'Enabling…' : 'Enable notifications'}
             </button>
@@ -78,7 +78,7 @@ export default function NotificationPrompt() {
             <button
               type='button'
               onClick={handleDismiss}
-              className='rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
+              className='rounded-lg px-4 py-2 text-xs lg:text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
             >
               Not now
             </button>
