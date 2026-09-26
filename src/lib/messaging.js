@@ -46,11 +46,9 @@ function setupForegroundMessages(messaging) {
   foregroundListenerInitialized = true;
 
   onMessage(messaging, (payload) => {
-    console.log('Foreground notification received:', payload);
+    const title = payload.data?.title || 'DC DEPT PORTAL ASABA HQ';
 
-    const title = payload.notification?.title || 'Church Portal';
-
-    const body = payload.notification?.body || '';
+    const body = payload.data?.body || '';
 
     if (Notification.permission !== 'granted') {
       return;

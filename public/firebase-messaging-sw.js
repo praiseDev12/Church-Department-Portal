@@ -18,9 +18,11 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title || 'Church Portal';
+  console.log('Payload:', payload);
 
-  const body = payload.notification?.body || 'You have a new notification.';
+  const title = payload.data?.title || 'DC DEPT PORTAL ASABA HQ';
+
+  const body = payload.data?.body || 'You have a new notification.';
 
   self.registration.showNotification(title, {
     body,
@@ -33,7 +35,7 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url || '/member/announcements';
+  const targetUrl = event.notification.data?.url || '/';
 
   const absoluteUrl = new URL(targetUrl, self.location.origin).href;
 
