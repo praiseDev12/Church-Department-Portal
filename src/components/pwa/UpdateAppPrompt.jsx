@@ -49,11 +49,11 @@ export default function UpdateAppPrompt() {
         </div>
 
         <div className='min-w-0 flex-1'>
-          <p className='font-semibold text-zinc-900 dark:text-white'>
+          <p className='font-semibold text-sm lg:text-lg text-zinc-900 dark:text-white'>
             New version available
           </p>
 
-          <p className='mt-1 text-sm text-zinc-600 dark:text-zinc-400'>
+          <p className='mt-1 text-xs lg:text-sm text-zinc-600 dark:text-zinc-400'>
             A new version of the Department Portal is ready.
           </p>
 
@@ -62,7 +62,7 @@ export default function UpdateAppPrompt() {
               type='button'
               onClick={handleUpdate}
               disabled={updating}
-              className='rounded-lg bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60'
+              className='rounded-lg bg-brand-500 px-3 py-2 text-xs lg:text-sm font-medium text-white transition-colors hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60'
             >
               {updating ? 'Updating...' : 'Update now'}
             </button>
@@ -71,7 +71,7 @@ export default function UpdateAppPrompt() {
               type='button'
               onClick={handleDismiss}
               disabled={updating}
-              className='rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60 dark:text-zinc-300 dark:hover:bg-zinc-800'
+              className='rounded-lg px-3 py-2 text-xs lg:text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60 dark:text-zinc-300 dark:hover:bg-zinc-800'
             >
               Later
             </button>

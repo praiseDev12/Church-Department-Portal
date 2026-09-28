@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
 
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
 
       manifest: {
         name: 'Dominion City Asaba HQ Department Portal',
