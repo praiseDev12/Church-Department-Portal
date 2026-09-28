@@ -23,6 +23,7 @@ import MemberAttendance from './pages/MembersAttendance.jsx';
 import Announcements from './pages/Announcement.jsx';
 import MemberAnnouncements from './pages/MemberAnnouncements.jsx';
 import OfflineIndicator from './components/pwa/OfflineIndicator.jsx';
+import UpdateAppPrompt from './components/pwa/UpdateAppPrompt.jsx';
 
 // Checks for authentication and admin privileges
 function RequireAdmin({ children }) {
@@ -71,8 +72,6 @@ function CheckInShell() {
 export default function App() {
   return (
     <>
-      <OfflineIndicator />
-
       <Routes>
         {/* Public routes */}
         <Route path='/login' element={<Login />} />
@@ -175,6 +174,8 @@ export default function App() {
         {/* Not found */}
         <Route path='*' element={<NotFound />} />
       </Routes>
+      <UpdateAppPrompt />
+      <OfflineIndicator />
     </>
   );
 }

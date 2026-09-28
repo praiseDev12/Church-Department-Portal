@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import InstallAppButton from '../pwa/InstallAppButton.jsx';
 
-export default function Topbar({ onMenuClick }) {
+export default function Topbar({ onMenuClick, isInstalled }) {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
@@ -13,14 +13,16 @@ export default function Topbar({ onMenuClick }) {
         {/* Sidebar toggle — mobile only. Lives in the header instead of
             floating independently over the page, so it reads as part
             of the app chrome rather than a separate overlay element. */}
-        <button
-          type='button'
-          onClick={onMenuClick}
-          aria-label='Open navigation menu'
-          className='flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800 md:hidden'
-        >
-          <Menu size={20} />
-        </button>
+        {!isInstalled && (
+          <button
+            type='button'
+            onClick={onMenuClick}
+            aria-label='Open navigation menu'
+            className='flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800 md:hidden'
+          >
+            <Menu size={20} />
+          </button>
+        )}
 
         <p className='truncate text-[10px] md:text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
           {user?.department?.name

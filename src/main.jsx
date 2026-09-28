@@ -8,9 +8,15 @@ import { ThemeProvider } from './context/ThemeContext.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 
 // Register the PWA service worker.
-registerSW({
+const updateSW = registerSW({
   immediate: true,
+
+  onNeedRefresh() {
+    window.dispatchEvent(new CustomEvent('pwa-update-available'));
+  },
 });
+
+window.__updatePWA = updateSW;
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
