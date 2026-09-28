@@ -302,9 +302,9 @@ export default function Announcements() {
                   >
                     <option value='once'>Once</option>
 
-                    <option value='every_30_seconds'>
+                    {/* <option value='every_30_seconds'>
                       Every 30 seconds (Testing)
-                    </option>
+                    </option> */}
 
                     <option value='every_6_hours'>Every 6 hours</option>
 
