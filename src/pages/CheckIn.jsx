@@ -60,17 +60,17 @@ export default function CheckIn() {
   return (
     <div className='mx-auto flex max-w-md flex-col gap-4'>
       <div>
-        <h1 className='font-display text-2xl font-semibold text-zinc-900 dark:text-white'>
+        <h1 className='font-display text-xl lg:text-2xl font-semibold text-zinc-900 dark:text-white'>
           Service Check-In
         </h1>
 
-        <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+        <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
           Mark your attendance for the current service.
         </p>
       </div>
 
       <Card>
-        <p className='mb-4 text-sm text-zinc-500 dark:text-zinc-400'>
+        <p className='mb-4 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
           Enter the 6-digit code shown at the entrance, or scan the QR code
           provided at the venue.
         </p>
@@ -102,7 +102,7 @@ export default function CheckIn() {
           <div className='mt-4 flex items-center gap-2'>
             <Badge tone='good'>Checked in</Badge>
 
-            <span className='text-sm text-zinc-500 dark:text-zinc-400'>
+            <span className='text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
               {message}
             </span>
           </div>
@@ -112,14 +112,14 @@ export default function CheckIn() {
           <div className='mt-4 flex items-center gap-2'>
             <Badge tone='warning'>Checked in late</Badge>
 
-            <span className='text-sm text-zinc-500 dark:text-zinc-400'>
+            <span className='text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
               {message}
             </span>
           </div>
         )}
 
         {status === 'error' && (
-          <div className='mt-4 rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-600 dark:bg-red-500/10 dark:text-red-400'>
+          <div className='mt-4 rounded-lg bg-red-50 px-3 py-2.5 text-xs lg:text-sm text-red-600 dark:bg-red-500/10 dark:text-red-400'>
             {message}
           </div>
         )}

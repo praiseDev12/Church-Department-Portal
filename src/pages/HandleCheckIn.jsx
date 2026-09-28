@@ -311,16 +311,18 @@ export default function HandleCheckIn() {
       {/* Header */}
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
         <div>
-          <h1 className='font-display text-2xl font-semibold text-zinc-900 dark:text-white'>
+          <h1 className='font-display text-lg lg:text-2xl font-semibold text-zinc-900 dark:text-white'>
             Service Check-In
           </h1>
 
-          <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+          <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
             Manage service schedules and generate today’s attendance codes
           </p>
         </div>
 
-        <Button onClick={openCreateModal}>Add service</Button>
+        <Button onClick={openCreateModal} className='text-xs lg:text-sm'>
+          Add service
+        </Button>
       </div>
 
       {/* Global error */}
@@ -395,11 +397,11 @@ export default function HandleCheckIn() {
       <section>
         <div className='mb-3 flex items-center justify-between'>
           <div>
-            <h2 className='font-display text-lg font-semibold text-zinc-900 dark:text-white'>
+            <h2 className='font-display text-sm lg:text-lg font-semibold text-zinc-900 dark:text-white'>
               Today’s check-in sessions
             </h2>
 
-            <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+            <p className='text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
               Sessions that have been generated for today
             </p>
           </div>
@@ -420,11 +422,11 @@ export default function HandleCheckIn() {
         ) : sessions.length === 0 ? (
           <Card>
             <div className='py-4 text-center'>
-              <p className='font-medium text-zinc-900 dark:text-white'>
+              <p className='font-medium text-sm lg:text-lg text-zinc-900 dark:text-white'>
                 No check-in sessions generated yet
               </p>
 
-              <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+              <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
                 Generate a code from a service below when the service is
                 scheduled for today
               </p>
@@ -486,12 +488,12 @@ export default function HandleCheckIn() {
 
       {/* Service schedules */}
       <section>
-        <div className='mb-3'>
-          <h2 className='font-display text-lg font-semibold text-zinc-900 dark:text-white'>
+        <div className='mb-4'>
+          <h2 className='font-display text-sm lg:text-lg font-semibold text-zinc-900 dark:text-white'>
             Service schedules
           </h2>
 
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+          <p className='text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
             Configure when members can check in
           </p>
         </div>
@@ -505,11 +507,11 @@ export default function HandleCheckIn() {
         ) : services.length === 0 ? (
           <Card>
             <div className='py-6 text-center'>
-              <p className='font-medium text-zinc-900 dark:text-white'>
+              <p className='font-medium text-sm lg:text-lg text-zinc-900 dark:text-white'>
                 No services configured
               </p>
 
-              <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+              <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
                 Add your first service schedule to start using check-in
               </p>
             </div>
@@ -531,11 +533,11 @@ export default function HandleCheckIn() {
                     {/* Service heading */}
                     <div className='flex items-start justify-between gap-3'>
                       <div>
-                        <h3 className='font-semibold text-zinc-900 dark:text-white'>
+                        <h3 className='font-semibold text-sm lg:text-lg text-zinc-900 dark:text-white'>
                           {service.name}
                         </h3>
 
-                        <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+                        <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
                           {formatDay(service?.dayOfWeek)} at{' '}
                           {formatTime(service?.startTime)}
                         </p>
@@ -584,13 +586,17 @@ export default function HandleCheckIn() {
                       {/* Generate/View code only for active services */}
                       {service.active &&
                         (session ? (
-                          <Button onClick={() => setSelectedSession(session)}>
+                          <Button
+                            onClick={() => setSelectedSession(session)}
+                            className='text-xs lg:text-sm'
+                          >
                             View today’s code
                           </Button>
                         ) : (
                           <Button
                             onClick={() => generateCode(service._id)}
                             disabled={generatingId === service._id}
+                            className='text-xs lg:text-sm'
                           >
                             {generatingId === service._id
                               ? 'Generating...'
@@ -604,7 +610,7 @@ export default function HandleCheckIn() {
                           variant='secondary'
                           onClick={() => openEditModal(service)}
                           disabled={isProcessing}
-                          className='flex-1'
+                          className='flex-1 text-xs lg:text-sm'
                         >
                           Edit
                         </Button>
@@ -614,7 +620,7 @@ export default function HandleCheckIn() {
                             variant='secondary'
                             onClick={() => deleteService(service)}
                             disabled={isProcessing}
-                            className='flex-1'
+                            className='flex-1 text-xs lg:text-sm'
                           >
                             {isProcessing ? 'Deactivating...' : 'Deactivate'}
                           </Button>
@@ -623,7 +629,7 @@ export default function HandleCheckIn() {
                             variant='secondary'
                             onClick={() => activate(service)}
                             disabled={isProcessing}
-                            className='flex-1'
+                            className='flex-1 text-xs lg:text-sm'
                           >
                             {isProcessing ? 'Activating...' : 'Activate'}
                           </Button>
@@ -711,7 +717,7 @@ export default function HandleCheckIn() {
             />
           </div>
 
-          <div className='rounded-lg bg-zinc-50 p-3 text-sm text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400'>
+          <div className='rounded-lg bg-zinc-50 p-3 text-xs lg:text-sm text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400'>
             <p>
               <strong>Open before:</strong> How many minutes before the service
               members can check in
@@ -740,11 +746,16 @@ export default function HandleCheckIn() {
               variant='secondary'
               onClick={() => setShowServiceModal(false)}
               disabled={savingService}
+              className='text-xs lg:text-sm'
             >
               Cancel
             </Button>
 
-            <Button type='submit' disabled={savingService}>
+            <Button
+              type='submit'
+              disabled={savingService}
+              className='text-xs lg:text-sm'
+            >
               {savingService
                 ? 'Saving...'
                 : editingService

@@ -1,6 +1,7 @@
 import { Menu, MoonIcon, SunIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
+import InstallAppButton from '../pwa/InstallAppButton.jsx';
 
 export default function Topbar({ onMenuClick }) {
   const { user } = useAuth();
@@ -29,6 +30,8 @@ export default function Topbar({ onMenuClick }) {
       </div>
 
       <div className='flex items-center gap-3 sm:gap-5 lg:gap-10'>
+        <InstallAppButton />
+
         <button
           onClick={toggleTheme}
           aria-label='Toggle color theme'

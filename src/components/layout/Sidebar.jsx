@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+
 import { logo } from '../../assets/index.js';
 
 import {
@@ -13,13 +14,13 @@ import {
   FileBarChart,
   Building2,
   PanelLeftClose,
-  ChevronsRight,
   Bell,
 } from 'lucide-react';
 
 import { useAuth } from '../../context/AuthContext.jsx';
 
 import BrandLockup from '../ui/BrandLockup.jsx';
+
 import { useTheme } from '../../context/ThemeContext.jsx';
 
 const linkBase =
@@ -107,8 +108,10 @@ export default function Sidebar({
   onClose,
   collapsed,
   onToggleCollapse,
+  isInstalled,
 }) {
   const { isMainAdmin, logout } = useAuth();
+
   const { theme } = useTheme();
 
   const visibleNavItems = navItems.filter(
@@ -117,61 +120,68 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile overlay */}
-      {open && (
-        <div
-          className='fixed inset-0 z-40 bg-black/50 md:hidden'
-          onClick={onClose}
-        />
-      )}
+      {/* Mobile navigation is disabled inside the installed PWA.
+          The floating mobile dock in AppLayout handles navigation there. */}
+      {!isInstalled && (
+        <>
+          {/* Mobile overlay */}
+          {open && (
+            <div
+              className='fixed inset-0 z-40 bg-black/50 md:hidden'
+              onClick={onClose}
+            />
+          )}
 
-      {/* Mobile sidebar */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-zinc-200 bg-white p-4 shadow-xl transition-transform duration-300 md:hidden dark:border-zinc-800 dark:bg-zinc-900 ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        {/* Header */}
-        <div className='mb-6 flex items-center justify-between px-2'>
-          <BrandLockup variant={theme} />
-
-          <button
-            type='button'
-            onClick={onClose}
-            className='rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white'
-            aria-label='Close navigation menu'
+          {/* Mobile sidebar */}
+          <aside
+            className={`fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-zinc-200 bg-white p-4 shadow-xl transition-transform duration-300 md:hidden dark:border-zinc-800 dark:bg-zinc-900 ${
+              open ? 'translate-x-0' : '-translate-x-full'
+            }`}
           >
-            <X size={22} />
-          </button>
-        </div>
+            {/* Header */}
+            <div className='mb-6 flex items-center justify-between px-2'>
+              <BrandLockup variant={theme} />
 
-        {/* Navigation */}
-        <nav className='flex flex-1 flex-col gap-1'>
-          {visibleNavItems.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
+              <button
+                type='button'
                 onClick={onClose}
-                className={({ isActive }) =>
-                  `${linkBase} ${isActive ? linkActive : linkInactive}`
-                }
+                className='rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white'
+                aria-label='Close navigation menu'
               >
-                <Icon size={18} />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
+                <X size={22} />
+              </button>
+            </div>
 
-        {/* Logout */}
-        <div className='border-t border-zinc-100 pt-2 dark:border-zinc-800'>
-          <LogoutButton onClick={logout} />
-        </div>
-      </aside>
+            {/* Navigation */}
+            <nav className='flex flex-1 flex-col gap-1'>
+              {visibleNavItems.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.end}
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `${linkBase} ${isActive ? linkActive : linkInactive}`
+                    }
+                  >
+                    <Icon size={18} />
+
+                    <span>{item.label}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
+
+            {/* Logout */}
+            <div className='border-t border-zinc-100 pt-2 dark:border-zinc-800'>
+              <LogoutButton onClick={logout} />
+            </div>
+          </aside>
+        </>
+      )}
 
       {/* Desktop sidebar */}
       <aside
@@ -189,7 +199,7 @@ export default function Sidebar({
             <button
               type='button'
               onClick={onToggleCollapse}
-              className='rounded-lg p-1 transition-all hover:opacity-80 hover:scale-102'
+              className='rounded-lg p-1 transition-all hover:scale-102 hover:opacity-80'
               aria-label='Expand sidebar'
               title='Expand sidebar'
             >

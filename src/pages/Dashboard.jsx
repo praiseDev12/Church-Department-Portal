@@ -78,18 +78,18 @@ export default function Dashboard() {
       <Card>
         <div className='flex items-start justify-between gap-4'>
           <div>
-            <p className='text-sm text-zinc-500 dark:text-zinc-400'>
+            <p className='text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
               Latest service
             </p>
 
-            <p className='mt-1 font-display text-lg font-semibold'>
+            <p className='mt-1 font-display text-sm lg:text-xs font-semibold'>
               {loading
                 ? 'Loading...'
                 : summary?.lastServiceName || 'No service recorded yet'}
             </p>
 
             {!loading && summary?.lastServiceDate && (
-              <p className='mt-1 text-sm text-zinc-500 dark:text-zinc-400'>
+              <p className='mt-1 text-xs lg:text-sm text-zinc-500 dark:text-zinc-400'>
                 {new Date(summary.lastServiceDate).toLocaleDateString('en-NG', {
                   weekday: 'long',
                   day: 'numeric',
@@ -103,7 +103,7 @@ export default function Dashboard() {
           {!loading && summary?.lastServiceName && (
             <a
               href='/attendance'
-              className='inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800'
+              className='inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-2 text-[10px] lg:text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800'
             >
               View attendance
               <ArrowRight size={15} />
