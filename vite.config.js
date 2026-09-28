@@ -27,13 +27,13 @@ export default defineConfig({
 
         icons: [
           {
-            src: '/pwa-192x192.png',
-            sizes: '192x192',
+            src: '/favicon-16x16.png',
+            sizes: '16x16',
             type: 'image/png',
           },
           {
-            src: '/pwa-512x512.png',
-            sizes: '512x512',
+            src: '/favicon-16x16.png',
+            sizes: '16x16',
             type: 'image/png',
           },
           {
