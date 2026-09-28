@@ -4,6 +4,10 @@
 /* v4 has no darkMode config option — this defines what ".dark" means as a variant */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* .random {
+  color: #e1e5ec;
+} */
+
 @theme {
   /* Brand blue — primary accent in light mode, secondary accent in dark mode */
   --color-brand-50: #e6ebf7;

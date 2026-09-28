@@ -8,6 +8,7 @@ import FormInput from '../components/ui/FormInput.jsx';
 import FormSelect from '../components/ui/FormSelect.jsx';
 import BrandLockup from '../components/ui/BrandLockup.jsx';
 import DevelopedByCredit from '../components/ui/DevelopedByCredit.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 // Same list as the Login page's panel, for visual and structural
 // consistency between the two — a new member sees the same "what this
@@ -61,6 +62,7 @@ const initialForm = {
 
 export default function MemberRegister() {
   const { login } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const [form, setForm] = useState(initialForm);
@@ -150,8 +152,7 @@ export default function MemberRegister() {
         <div
           className='absolute inset-0 opacity-[0.15] dark:opacity-[0.08]'
           style={{
-            backgroundImage:
-              'radial-gradient(circle, #003599 1px, transparent 1px)',
+            backgroundImage: `radial-gradient(circle, ${theme === 'light' ? '#003599' : '#e1e5ec'} 1px, transparent 1px)`,
             backgroundSize: '28px 28px',
           }}
         />
@@ -174,7 +175,7 @@ export default function MemberRegister() {
         />
         <div className='pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-brand-300 opacity-20 blur-3xl' />
 
-        <BrandLockup variant='dark' />
+        <BrandLockup variant={theme} />
 
         <div className='relative flex flex-col gap-8'>
           <h2 className='font-display text-3xl font-semibold leading-tight text-white'>
@@ -206,7 +207,7 @@ export default function MemberRegister() {
       <div className='flex flex-1 z-10 items-center justify-center py-10 px-4 sm:px-8'>
         <div className='w-full max-w-lg'>
           <div className='lg:hidden flex-center gap-3 mb-5'>
-            <BrandLockup variant='light' />
+            <BrandLockup variant={theme} />
           </div>
 
           <h1 className='font-display text-2xl font-semibold text-zinc-900 dark:text-white'>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Users, CalendarCheck, Wallet, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 import { apiFetch } from '../lib/api.js';
 import Button from '../components/ui/Button.jsx';
 import FormInput from '../components/ui/FormInput.jsx';
@@ -28,6 +29,7 @@ const whatYouCanDo = [
 
 export default function Login() {
   const { user, login } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -116,8 +118,7 @@ export default function Login() {
         <div
           className='absolute inset-0 opacity-[0.15] dark:opacity-[0.08]'
           style={{
-            backgroundImage:
-              'radial-gradient(circle, #003599 1px, transparent 1px)',
+            backgroundImage: `radial-gradient(circle, ${theme === 'light' ? '#003599' : '#e1e5ec'} 1px, transparent 1px)`,
             backgroundSize: '28px 28px',
           }}
         />
@@ -170,7 +171,7 @@ export default function Login() {
       <div className='flex flex-1 z-10 items-center justify-center py-10 px-4 sm:px-8'>
         <div className='w-full max-w-lg'>
           <div className='lg:hidden flex-center gap-3 mb-5'>
-            <BrandLockup variant='light' />
+            <BrandLockup variant={theme} />
           </div>
 
           <h1 className='font-display text-2xl font-semibold text-zinc-900 dark:text-white'>
