@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { apiFetch } from '../lib/api.js';
 
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const statConfig = [
   { key: 'totalMembers', label: 'Total members' },
@@ -103,13 +104,13 @@ export default function Dashboard() {
           </div>
 
           {!loading && summary?.lastServiceName && (
-            <a
-              href='/attendance'
+            <Link
+              to='/attendance'
               className='inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-2 text-[10px] lg:text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800'
             >
               View attendance
               <ArrowRight size={15} />
-            </a>
+            </Link>
           )}
         </div>
       </Card>

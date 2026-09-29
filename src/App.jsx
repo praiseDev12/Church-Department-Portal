@@ -24,6 +24,7 @@ import Announcements from './pages/Announcement.jsx';
 import MemberAnnouncements from './pages/MemberAnnouncements.jsx';
 import OfflineIndicator from './components/pwa/OfflineIndicator.jsx';
 import UpdateAppPrompt from './components/pwa/UpdateAppPrompt.jsx';
+import { useEffect } from 'react';
 
 // Checks for authentication and admin privileges
 function RequireAdmin({ children }) {
@@ -70,6 +71,14 @@ function CheckInShell() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const loader = document.getElementById('initial-loader');
+
+    if (loader) {
+      loader.remove();
+    }
+  }, []);
+
   return (
     <>
       <Routes>

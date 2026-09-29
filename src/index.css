@@ -73,3 +73,87 @@
     @apply border border-red-500;
   }
 }
+
+/* Heart-pulse loader animations */
+@keyframes heartBeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.08);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.06);
+  }
+
+  56% {
+    transform: scale(1);
+  }
+}
+
+@keyframes heartRing {
+  0% {
+    transform: scale(0.75);
+    opacity: 0.7;
+  }
+
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes heartRingDelayed {
+  0% {
+    transform: scale(0.75);
+    opacity: 0;
+  }
+
+  15% {
+    transform: scale(0.75);
+    opacity: 0.5;
+  }
+
+  85% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.animate-heart-beat {
+  animation: heartBeat 1.2s ease-in-out infinite;
+}
+
+.animate-heart-ring {
+  animation: heartRing 1.2s ease-out infinite;
+}
+
+.animate-heart-ring-delayed {
+  animation: heartRingDelayed 1.2s ease-out infinite;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-heart-beat,
+  .animate-heart-ring,
+  .animate-heart-ring-delayed {
+    animation: none;
+  }
+}

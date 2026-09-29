@@ -26,13 +26,15 @@ export default function OfflineIndicator() {
   }
 
   return (
-    <div
-      className='fixed bottom-4 left-1/2 z-9999 flex -translate-x-1/2 items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-lg dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200'
-      role='status'
-      aria-live='polite'
-    >
-      <span className='size-2 rounded-full bg-red-500' />
-      You're offline
+    <div className='w-screen h-dvh fixed inset-0 top-0 z-999 backdrop-blur-sm'>
+      <div
+        className='fixed top-4 left-1/2 z-9999 flex -translate-x-1/2 items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-lg dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200'
+        role='status'
+        aria-live='polite'
+      >
+        <span className='size-2 rounded-full bg-red-500 animate-pulse' />
+        You're offline
+      </div>
     </div>
   );
 }
