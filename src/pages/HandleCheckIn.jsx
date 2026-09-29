@@ -121,6 +121,7 @@ export default function HandleCheckIn() {
 
   const [generatingId, setGeneratingId] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [editingService, setEditingService] = useState(null);
@@ -174,6 +175,21 @@ export default function HandleCheckIn() {
       setError(err.message || 'Unable to load services.');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function copyCheckInCode() {
+    if (!selectedSession?.code) return;
+
+    try {
+      await navigator.clipboard.writeText(selectedSession.code);
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy check-in code:', err);
     }
   }
 
@@ -335,58 +351,102 @@ export default function HandleCheckIn() {
       {/* Generated code */}
       {selectedSession && (
         <Card>
-          <div className='flex flex-col gap-5'>
-            <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
-              <div>
-                <p className='text-sm font-medium text-zinc-500 dark:text-zinc-400'>
-                  Current check-in code
-                </p>
+          <div className='relative isolate overflow-hidden rounded-2xl bg-linear-to-br from-zinc-950 via-zinc-900 to-zinc-800 p-5 text-white shadow-sm sm:p-6'>
+            {/* Decorative background */}
+            <div className='pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-amber-400/10 blur-3xl' />
+            <div className='pointer-events-none absolute -bottom-20 -left-16 h-44 w-44 rounded-full bg-blue-400/10 blur-3xl' />
 
-                <h2 className='text-lg font-semibold text-zinc-900 dark:text-white'>
-                  {selectedSession.service?.name || 'Service'}
-                </h2>
+            <div className='relative flex flex-col gap-6'>
+              {/* Header */}
+              <div className='flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
+                <div>
+                  <div className='mb-2 flex items-center gap-2'>
+                    <span className='flex h-2 w-2 rounded-full bg-emerald-400' />
+
+                    <p className='text-xs font-medium uppercase tracking-[0.15em] text-zinc-400'>
+                      Current check-in
+                    </p>
+                  </div>
+
+                  <h2 className='text-xl font-semibold tracking-tight text-white'>
+                    {selectedSession.service?.name || 'Service'}
+                  </h2>
+
+                  <p className='mt-1 text-sm text-zinc-400'>
+                    Share this code with members to check in.
+                  </p>
+                </div>
+
+                <div>
+                  <Badge
+                    tone={getStatusTone(getSessionStatus(selectedSession))}
+                  >
+                    {getStatusLabel(getSessionStatus(selectedSession))}
+                  </Badge>
+                </div>
               </div>
 
-              <Badge tone={getStatusTone(getSessionStatus(selectedSession))}>
-                {getStatusLabel(getSessionStatus(selectedSession))}
-              </Badge>
-            </div>
+              {/* Code */}
+              <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-white/6 px-4 py-7 text-center backdrop-blur-sm sm:px-6'>
+                <div className='pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/20 to-transparent' />
 
-            <div className='rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-6 text-center dark:border-zinc-700 dark:bg-zinc-900'>
-              <p className='mb-2 text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400'>
-                Check-in code
-              </p>
-
-              <p className='font-mono text-5xl font-bold tracking-[0.3em] text-zinc-900 dark:text-white'>
-                {selectedSession.code}
-              </p>
-            </div>
-
-            <div className='grid grid-cols-1 gap-3 text-sm sm:grid-cols-3'>
-              <div>
-                <p className='text-zinc-500 dark:text-zinc-400'>Opens</p>
-
-                <p className='font-medium text-zinc-900 dark:text-white'>
-                  {formatDateTime(selectedSession.opensAt)}
+                <p className='mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-zinc-400'>
+                  Check-in code
                 </p>
+
+                <p className='font-mono text-4xl font-bold tracking-[0.28em] text-white sm:text-5xl'>
+                  {selectedSession.code}
+                </p>
+
+                <div className='mt-5 flex justify-center'>
+                  <Button
+                    type='button'
+                    variant='secondary'
+                    onClick={copyCheckInCode}
+                    className='min-w-28 text-xs'
+                  >
+                    {copied ? 'Copied ✓' : 'Copy code'}
+                  </Button>
+                </div>
               </div>
 
-              <div>
-                <p className='text-zinc-500 dark:text-zinc-400'>
-                  Scheduled start
-                </p>
+              {/* Session times */}
+              <div className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
+                <div className='rounded-xl border border-white/10 bg-white/4 p-4'>
+                  <p className='text-xs text-zinc-400'>Opens</p>
 
-                <p className='font-medium text-zinc-900 dark:text-white'>
-                  {formatDateTime(selectedSession.scheduledStart)}
-                </p>
-              </div>
+                  <p className='mt-1.5 font-medium text-white'>
+                    {formatDateTime(selectedSession.opensAt)}
+                  </p>
 
-              <div>
-                <p className='text-zinc-500 dark:text-zinc-400'>Closes</p>
+                  <p className='mt-1 text-[11px] text-zinc-500'>
+                    Members can start checking in
+                  </p>
+                </div>
 
-                <p className='font-medium text-zinc-900 dark:text-white'>
-                  {formatDateTime(selectedSession.closesAt)}
-                </p>
+                <div className='rounded-xl border border-white/10 bg-white/4 p-4'>
+                  <p className='text-xs text-zinc-400'>Scheduled start</p>
+
+                  <p className='mt-1.5 font-medium text-white'>
+                    {formatDateTime(selectedSession.scheduledStart)}
+                  </p>
+
+                  <p className='mt-1 text-[11px] text-zinc-500'>
+                    Service start time
+                  </p>
+                </div>
+
+                <div className='rounded-xl border border-white/10 bg-white/4 p-4'>
+                  <p className='text-xs text-zinc-400'>Closes</p>
+
+                  <p className='mt-1.5 font-medium text-white'>
+                    {formatDateTime(selectedSession.closesAt)}
+                  </p>
+
+                  <p className='mt-1 text-[11px] text-zinc-500'>
+                    Check-in closes
+                  </p>
+                </div>
               </div>
             </div>
           </div>
