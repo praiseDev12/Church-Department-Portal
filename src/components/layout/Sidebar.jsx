@@ -10,6 +10,7 @@ import {
   ClipboardCheck,
   Settings,
   CalendarCheck,
+  CalendarRange,
   HandCoins,
   FileBarChart,
   Building2,
@@ -71,6 +72,12 @@ const navItems = [
     label: 'Contributions',
     mainAdminOnly: true,
     icon: HandCoins,
+  },
+  {
+    to: '/roster',
+    label: 'Roster',
+    mainAdminOnly: false,
+    icon: CalendarRange,
   },
   {
     to: '/reports',

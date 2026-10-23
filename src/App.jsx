@@ -25,6 +25,13 @@ import MemberAnnouncements from './pages/MemberAnnouncements.jsx';
 import OfflineIndicator from './components/pwa/OfflineIndicator.jsx';
 import UpdateAppPrompt from './components/pwa/UpdateAppPrompt.jsx';
 import { useEffect } from 'react';
+import Roster from './pages/Roster.jsx';
+import RosterTemplate from './pages/RosterTemplate.jsx';
+import RosterMonthly from './pages/RosterMonthly.jsx';
+import RosterCreate from './pages/RosterCreate.jsx';
+import RosterTemplateEdit from './pages/RosterTemplateEdit.jsx';
+import RosterEventCreate from './pages/RoasterEventCreate.jsx';
+import RosterEventEdit from './pages/RosterEventEdit.jsx';
 
 // Checks for authentication and admin privileges
 function RequireAdmin({ children }) {
@@ -136,12 +143,31 @@ export default function App() {
           }
         >
           <Route path='/' element={<Dashboard />} />
-
           <Route path='/members' element={<Members />} />
-
           <Route path='/announcements' element={<Announcements />} />
-
           <Route path='/attendance' element={<AttendanceReport />} />
+
+          <Route
+            path='/roster/template/:templateId/event/:eventId/edit'
+            element={<RosterEventEdit />}
+          />
+
+          <Route
+            path='/roster/template/:templateId/event/create'
+            element={<RosterEventCreate />}
+          />
+          <Route
+            path='/roster/template/:templateId/edit'
+            element={<RosterTemplateEdit />}
+          />
+          <Route path='/roster/create' element={<RosterCreate />} />
+
+          <Route path='/roster' element={<Roster />} />
+          <Route
+            path='/roster/template/:templateId'
+            element={<RosterTemplate />}
+          />
+          <Route path='/roster/:rosterId' element={<RosterMonthly />} />
 
           <Route
             path='/reports'
@@ -151,7 +177,6 @@ export default function App() {
               </RequireMainAdmin>
             }
           />
-
           <Route
             path='/contributions'
             element={
@@ -160,7 +185,6 @@ export default function App() {
               </RequireMainAdmin>
             }
           />
-
           <Route
             path='/units'
             element={
@@ -169,7 +193,6 @@ export default function App() {
               </RequireMainAdmin>
             }
           />
-
           <Route
             path='/admin-checkin'
             element={
