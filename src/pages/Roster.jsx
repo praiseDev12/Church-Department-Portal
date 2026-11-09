@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CalendarDays, Clock3, Eye, Plus, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
-import { getRosterTemplates } from '../services/rosterService.js';
+import {
+  getRosterTemplates,
+  resetRosterData,
+} from '../services/rosterService.js';
 
 import Card from '../components/ui/Card.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -42,12 +45,30 @@ const formatDutySchedule = (duty) => {
 };
 
 export default function Roster() {
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+
+  const handleResetRosterData = async () => {
+    try {
+      setIsResetting(true);
+
+      await resetRosterData();
+
+      setTemplates([]);
+      setShowResetModal(false);
+    } catch (error) {
+      console.error('Failed to reset roster data:', error);
+      setError(error.message || 'Failed to reset roster data.');
+    } finally {
+      setIsResetting(false);
+    }
+  };
 
   useEffect(() => {
     document.title = 'Roster';
@@ -107,6 +128,16 @@ export default function Roster() {
             <Eye className='h-4 w-4' />
             Published Rosters
           </Button>
+
+          {templates?.length > 0 && (
+            <button
+              type='button'
+              onClick={() => setShowResetModal(true)}
+              className='inline-flex items-center gap-2 rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/30'
+            >
+              Reset Roster Data
+            </button>
+          )}
         </div>
       </div>
 
@@ -269,6 +300,44 @@ export default function Roster() {
               </Card>
             );
           })}
+          {showResetModal && (
+            <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
+              <div className='w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900'>
+                <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                  Reset all roster data?
+                </h2>
+
+                <p className='mt-3 text-sm leading-6 text-gray-600 dark:text-gray-400'>
+                  This will permanently delete all roster templates, programs,
+                  draft rosters, and published rosters for this unit.
+                </p>
+
+                <p className='mt-2 text-sm font-medium text-red-600 dark:text-red-400'>
+                  This action cannot be undone.
+                </p>
+
+                <div className='mt-6 flex justify-end gap-3'>
+                  <button
+                    type='button'
+                    onClick={() => setShowResetModal(false)}
+                    disabled={isResetting}
+                    className='rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800'
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type='button'
+                    onClick={handleResetRosterData}
+                    disabled={isResetting}
+                    className='rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50'
+                  >
+                    {isResetting ? 'Resetting...' : 'Reset Everything'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

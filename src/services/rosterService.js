@@ -198,3 +198,9 @@ export async function deleteRosterTemplate(templateId) {
 export async function getPublishedRosters() {
   return apiFetch('/roster/published');
 }
+
+export async function resetRosterData() {
+  return apiFetch('/roster/reset', {
+    method: 'DELETE',
+  });
+}
