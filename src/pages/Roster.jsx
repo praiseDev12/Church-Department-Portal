@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CalendarDays, Clock3, Plus, Users } from 'lucide-react';
-
+import { CalendarDays, Clock3, Eye, Plus, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getRosterTemplates } from '../services/rosterService.js';
 
@@ -85,29 +84,36 @@ export default function Roster() {
       {/* Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div>
-          <h1 className='font-display text-2xl font-semibold text-gray-900 dark:text-white'>
+          <h1 className='font-display text-xl lg:text-2xl font-semibold text-gray-900 dark:text-white'>
             Roster
           </h1>
 
-          <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+          <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
             Manage your unit schedules and monthly assignments.
           </p>
         </div>
 
-        <Button
-          type='button'
-          className='mt-5'
-          onClick={() => navigate('/roster/create')}
-        >
-          <Plus className='h-4 w-4' />
-          Create Roster
-        </Button>
+        <div className='mt-5 flex flex-col gap-2 sm:flex-row'>
+          <Button type='button' onClick={() => navigate('/roster/create')}>
+            <Plus className='h-4 w-4' />
+            Create Roster
+          </Button>
+
+          <Button
+            type='button'
+            variant='secondary'
+            onClick={() => navigate('/roster/published')}
+          >
+            <Eye className='h-4 w-4' />
+            Published Rosters
+          </Button>
+        </div>
       </div>
 
       {/* Error */}
       {error && (
         <Card>
-          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'>
+          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-xs lg:text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'>
             {error}
           </div>
         </Card>
@@ -125,7 +131,7 @@ export default function Roster() {
               No rosters yet
             </h2>
 
-            <p className='mt-2 max-w-md text-sm text-gray-500 dark:text-gray-400'>
+            <p className='mt-2 max-w-md text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
               Create a roster template to define your recurring unit duties and
               start generating monthly rosters.
             </p>
@@ -167,13 +173,13 @@ export default function Roster() {
                         </h2>
 
                         {template.description && (
-                          <p className='mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400'>
+                          <p className='mt-1 text-xs lg:text-sm leading-6 text-gray-500 dark:text-gray-400'>
                             {template.description}
                           </p>
                         )}
                       </div>
 
-                      <span className='shrink-0 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 dark:bg-green-900/20 dark:text-green-400'>
+                      <span className='shrink-0 rounded-full bg-green-50 px-2.5 py-1 text-[10px] lg:text-xs font-medium text-green-700 dark:bg-green-900/20 dark:text-green-400'>
                         Active
                       </span>
                     </div>

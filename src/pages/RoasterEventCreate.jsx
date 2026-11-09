@@ -11,7 +11,8 @@ import {
   Users,
 } from 'lucide-react';
 
-import Button from '../components/ui/button.jsx';
+import Button from '../components/ui/Button.jsx';
+
 import {
   createRosterEvent,
   getRosterTemplates,
@@ -279,7 +280,7 @@ function RosterEventCreate() {
       )}
 
       <form onSubmit={handleSubmit} className='space-y-6'>
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5'>
             <h2 className='font-display text-lg font-semibold'>
               Program Details
@@ -304,7 +305,7 @@ function RosterEventCreate() {
                 value={form.name}
                 onChange={(event) => updateField('name', event.target.value)}
                 placeholder='e.g. Technical Conference'
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
@@ -320,13 +321,13 @@ function RosterEventCreate() {
                 }
                 placeholder='Describe the program...'
                 rows={3}
-                className='w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full resize-none rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
               />
             </div>
           </div>
         </div>
 
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5 flex items-start gap-3'>
             <div className='rounded-lg bg-brand-500/10 p-2 text-brand-500'>
               <CalendarDays className='h-5 w-5' />
@@ -353,7 +354,7 @@ function RosterEventCreate() {
                 onChange={(event) =>
                   updateField('startDate', event.target.value)
                 }
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
@@ -365,7 +366,7 @@ function RosterEventCreate() {
                 value={form.endDate}
                 min={form.startDate || undefined}
                 onChange={(event) => updateField('endDate', event.target.value)}
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
@@ -383,7 +384,7 @@ function RosterEventCreate() {
                   onChange={(event) =>
                     updateField('startTime', event.target.value)
                   }
-                  className='w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand-500'
+                  className='w-full rounded-xl border border-brand bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand-500'
                 />
               </div>
             </div>
@@ -401,14 +402,14 @@ function RosterEventCreate() {
                   onChange={(event) =>
                     updateField('endTime', event.target.value)
                   }
-                  className='w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand-500'
+                  className='w-full rounded-xl border border-brand bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand-500'
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5 flex items-start gap-3'>
             <div className='rounded-lg bg-brand-500/10 p-2 text-brand-500'>
               <MapPin className='h-5 w-5' />
@@ -427,11 +428,11 @@ function RosterEventCreate() {
             value={form.location}
             onChange={(event) => updateField('location', event.target.value)}
             placeholder='e.g. Main Auditorium'
-            className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+            className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
           />
         </div>
 
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5 flex items-start gap-3'>
             <div className='rounded-lg bg-brand-500/10 p-2 text-brand-500'>
               <Users className='h-5 w-5' />
@@ -460,11 +461,11 @@ function RosterEventCreate() {
                 onChange={(event) =>
                   updateField('membersNeeded', event.target.value)
                 }
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
-            <div className='rounded-xl border border-border bg-background/50 p-4'>
+            <div className='rounded-xl border border-brand bg-background/50 p-4'>
               <label className='flex cursor-pointer items-start gap-3'>
                 <input
                   type='checkbox'
@@ -528,7 +529,7 @@ function RosterEventCreate() {
                             updateRole(index, event.target.value)
                           }
                           placeholder='e.g. Projection Operator'
-                          className='flex-1 rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                          className='flex-1 rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
                         />
 
                         <Button

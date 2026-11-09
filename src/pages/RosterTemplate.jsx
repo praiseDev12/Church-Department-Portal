@@ -310,7 +310,7 @@ export default function RosterTemplate() {
         </Button>
 
         <Card>
-          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'>
+          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-xs lg:text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'>
             {error}
           </div>
         </Card>
@@ -339,7 +339,7 @@ export default function RosterTemplate() {
             onClick={() => navigate(`/roster/template/${templateId}/edit`)}
           >
             <Edit3 className='h-4 w-4' />
-            Edit Template
+            <span className='hidden lg:block'>Edit Template</span>
           </Button>
 
           <Button
@@ -347,21 +347,17 @@ export default function RosterTemplate() {
             variant='outline'
             onClick={openDeleteTemplateModal}
             disabled={deletingTemplate}
-            className='w-full text-red-500 hover:text-red-500 sm:w-auto'
+            className='text-red-500 hover:text-red-500 sm:w-auto'
           >
             <Trash2 className='h-4 w-4' />
-            Delete Template
+            <span className='hidden lg:block'>Delete Template</span>
           </Button>
         </div>
 
         <Button
           type='button'
           onClick={() =>
-            navigate(`/roster/template/${templateId}`, {
-              state: {
-                createdEventId: response.event._id,
-              },
-            })
+            navigate(`/roster/template/${templateId}/event/create`)
           }
           className='w-full sm:w-auto'
         >
@@ -373,18 +369,18 @@ export default function RosterTemplate() {
       {/* Header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
         <div>
-          <h1 className='font-display text-2xl font-semibold text-gray-900 dark:text-white'>
+          <h1 className='font-display text-lg lg:text-2xl font-semibold text-gray-900 dark:text-white'>
             {template.name}
           </h1>
 
           {template.description && (
-            <p className='mt-1 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 max-w-2xl text-xs lg:text-sm leading-6 text-gray-500 dark:text-gray-400'>
               {template.description}
             </p>
           )}
         </div>
 
-        <span className='w-fit rounded-full bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 dark:bg-green-900/20 dark:text-green-400'>
+        <span className='w-fit rounded-full bg-green-50 px-3 py-1.5 text-[10px] lg:text-xs font-medium text-green-700 dark:bg-green-900/20 dark:text-green-400'>
           Active
         </span>
       </div>
@@ -396,14 +392,14 @@ export default function RosterTemplate() {
               Monthly roster
             </h2>
 
-            <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
               Generate and review assignments for a specific month.
             </p>
           </div>
 
           {error && (
             <div
-              className='rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'
+              className='rounded-lg border border-red-200 bg-red-50 p-3 text-xs lg:text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'
               role='alert'
             >
               {error}
@@ -414,7 +410,7 @@ export default function RosterTemplate() {
             <div className='w-full sm:max-w-xs'>
               <label
                 htmlFor='roster-month'
-                className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'
+                className='mb-2 block text-xs lg:text-sm font-medium text-gray-700 dark:text-gray-300'
               >
                 Month
               </label>
@@ -428,7 +424,7 @@ export default function RosterTemplate() {
                   value={month}
                   onChange={(event) => setMonth(event.target.value)}
                   disabled={generating}
-                  className='w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-3 text-sm text-gray-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900 dark:text-white'
+                  className='w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-3 text-xs lg:text-sm text-gray-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900 dark:text-white'
                 />
               </div>
             </div>
@@ -498,7 +494,7 @@ export default function RosterTemplate() {
             Recurring duties
           </h2>
 
-          <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+          <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
             These duties are automatically included when a monthly roster is
             generated.
           </p>
@@ -506,7 +502,7 @@ export default function RosterTemplate() {
 
         {activeDuties.length === 0 ? (
           <Card>
-            <div className='py-8 text-center text-sm text-gray-500 dark:text-gray-400'>
+            <div className='py-8 text-center text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
               No active recurring duties.
             </div>
           </Card>
@@ -522,7 +518,7 @@ export default function RosterTemplate() {
                         {duty.name}
                       </h3>
 
-                      <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                      <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
                         {formatSchedule(duty)}
                       </p>
                     </div>
@@ -535,7 +531,7 @@ export default function RosterTemplate() {
 
                   {/* Duty details */}
                   <div className='grid gap-3 sm:grid-cols-3'>
-                    <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300'>
+                    <div className='flex items-center gap-2 text-xs lg:text-sm text-gray-600 dark:text-gray-300'>
                       <Clock3 className='h-4 w-4 text-gray-400' />
                       <span>
                         {formatTime(duty.startTime)}
@@ -543,7 +539,7 @@ export default function RosterTemplate() {
                       </span>
                     </div>
 
-                    <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300'>
+                    <div className='flex items-center gap-2 text-xs lg:text-sm text-gray-600 dark:text-gray-300'>
                       <Users className='h-4 w-4 text-gray-400' />
                       <span>
                         {duty.membersNeeded}{' '}
@@ -553,7 +549,7 @@ export default function RosterTemplate() {
                       </span>
                     </div>
 
-                    <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300'>
+                    <div className='flex items-center gap-2 text-xs lg:text-sm text-gray-600 dark:text-gray-300'>
                       <MapPin className='h-4 w-4 text-gray-400' />
                       <span>{duty.location || 'No location set'}</span>
                     </div>
@@ -587,14 +583,14 @@ export default function RosterTemplate() {
         )}
       </div>
 
-      <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+      <div className='rounded-2xl border-2 border-brand p-5 shadow-sm sm:p-6'>
         <div className='mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
           <div>
             <h2 className='font-display text-lg font-semibold'>
               Special Programs
             </h2>
 
-            <p className='mt-1 text-sm text-muted-foreground'>
+            <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
               One-off and multi-day programs added to this roster.
             </p>
           </div>
@@ -619,7 +615,9 @@ export default function RosterTemplate() {
           <div className='rounded-xl border border-dashed border-border px-4 py-8 text-center'>
             <CalendarDays className='mx-auto h-8 w-8 text-muted-foreground' />
 
-            <p className='mt-3 text-sm font-medium'>No special programs yet</p>
+            <p className='mt-3 text-xs lg:text-sm font-medium'>
+              No special programs yet
+            </p>
 
             <p className='mt-1 text-xs text-muted-foreground'>
               Add a one-off or multi-day program when your unit needs additional
@@ -632,13 +630,13 @@ export default function RosterTemplate() {
               <div
                 id={`roster-event-${event._id}`}
                 key={event._id}
-                className='rounded-xl border border-border bg-background p-4'
+                className='rounded-xl border border-brand border-dashed bg-background p-4'
               >
                 <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
                   <div className='min-w-0'>
                     <h3 className='font-semibold'>{event.name}</h3>
                     {event.description && (
-                      <p className='mt-1 text-sm text-muted-foreground'>
+                      <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
                         {event.description}
                       </p>
                     )}
@@ -683,16 +681,6 @@ export default function RosterTemplate() {
                       </Button>
                     </div>
                   </div>
-
-                  <div className='shrink-0'>
-                    <span className='inline-flex rounded-full bg-brand-500/10 px-2.5 py-1 text-xs font-medium text-brand-500'>
-                      {event.rolesEnabled
-                        ? `${event.roles?.length || 0} role${
-                            event.roles?.length === 1 ? '' : 's'
-                          }`
-                        : 'Roles disabled'}
-                    </span>
-                  </div>
                 </div>
               </div>
             ))}
@@ -721,7 +709,7 @@ export default function RosterTemplate() {
                     Delete roster template?
                   </h2>
 
-                  <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                  <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
                     This will permanently delete{' '}
                     <span className='font-medium text-gray-700 dark:text-gray-300'>
                       {template?.name || 'this roster template'}

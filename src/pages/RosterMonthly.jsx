@@ -37,7 +37,7 @@ import { getMembers } from '../services/memberService.js';
 
 import Card from '../components/ui/Card.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import Button from '../components/ui/button.jsx';
+import Button from '../components/ui/Button.jsx';
 
 const formatDate = (dateString) => {
   const [year, month, day] = dateString.split('-').map(Number);

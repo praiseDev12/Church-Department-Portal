@@ -328,7 +328,7 @@ export default function RosterCreate() {
             Create Roster
           </h1>
 
-          <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+          <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
             Set up your recurring roster schedule.
           </p>
         </div>
@@ -336,7 +336,7 @@ export default function RosterCreate() {
 
       {error && (
         <Card>
-          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'>
+          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-xs lg:text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400'>
             {error}
           </div>
         </Card>
@@ -351,7 +351,7 @@ export default function RosterCreate() {
                 Basic information
               </h2>
 
-              <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+              <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
                 Give this roster a name and an optional description.
               </p>
             </div>
@@ -368,7 +368,7 @@ export default function RosterCreate() {
               <div>
                 <label
                   htmlFor='roster-description'
-                  className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'
+                  className='mb-1.5 block text-xs lg:text-sm font-medium text-gray-700 dark:text-gray-300'
                 >
                   Description
                 </label>
@@ -379,7 +379,7 @@ export default function RosterCreate() {
                   onChange={(event) => setDescription(event.target.value)}
                   placeholder='Describe what this roster is used for'
                   rows={4}
-                  className='block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500'
+                  className='block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-xs lg:text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500'
                 />
               </div>
             </div>
@@ -394,7 +394,7 @@ export default function RosterCreate() {
                   Recurring duties
                 </h2>
 
-                <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
                   Define the regular duties that should appear on every monthly
                   roster.
                 </p>
@@ -425,11 +425,11 @@ export default function RosterCreate() {
                       </div>
 
                       <div>
-                        <h3 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h3 className='text-xs lg:text-sm font-semibold text-gray-900 dark:text-white'>
                           Duty {index + 1}
                         </h3>
 
-                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='text-[10px] lg:text-xs text-gray-500 dark:text-gray-400'>
                           Recurring weekly schedule
                         </p>
                       </div>
@@ -527,11 +527,11 @@ export default function RosterCreate() {
                         </div>
 
                         <div>
-                          <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                          <p className='text-xs lg:text-sm font-semibold text-gray-900 dark:text-white'>
                             Roles
                           </p>
 
-                          <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                          <p className='mt-0.5 text-[10px] lg:text-xs text-gray-500 dark:text-gray-400'>
                             Assign specific responsibilities to members.
                           </p>
                         </div>
@@ -545,7 +545,7 @@ export default function RosterCreate() {
                           className='h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-900'
                         />
 
-                        <span className='text-sm text-gray-700 dark:text-gray-300'>
+                        <span className='text-xs lg:text-sm text-gray-700 dark:text-gray-300'>
                           Enable roles
                         </span>
                       </label>
@@ -554,7 +554,7 @@ export default function RosterCreate() {
                     {duty.rolesEnabled && (
                       <div className='mt-4 space-y-3'>
                         {duty.roles.length === 0 && (
-                          <div className='rounded-lg bg-gray-50 p-3 text-sm text-gray-500 dark:bg-gray-800/60 dark:text-gray-400'>
+                          <div className='rounded-lg bg-gray-50 p-3 text-xs lg:text-sm text-gray-500 dark:bg-gray-800/60 dark:text-gray-400'>
                             No roles added yet.
                           </div>
                         )}
@@ -622,7 +622,7 @@ export default function RosterCreate() {
                 Roster settings
               </h2>
 
-              <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+              <p className='mt-1 text-xs lg:text-sm text-gray-500 dark:text-gray-400'>
                 Choose how members should be assigned when monthly rosters are
                 generated.
               </p>
@@ -643,11 +643,11 @@ export default function RosterCreate() {
                 />
 
                 <div>
-                  <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                  <p className='text-xs lg:text-sm font-medium text-gray-900 dark:text-white'>
                     Avoid overlapping assignments
                   </p>
 
-                  <p className='mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                  <p className='mt-1 text-[10px] lg:text-xs leading-5 text-gray-500 dark:text-gray-400'>
                     Prevent the same member from being assigned to two duties
                     happening at the same time.
                   </p>
@@ -668,11 +668,11 @@ export default function RosterCreate() {
                 />
 
                 <div>
-                  <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                  <p className='text-xs lg:text-sm font-medium text-gray-900 dark:text-white'>
                     Balance assignments
                   </p>
 
-                  <p className='mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                  <p className='mt-1 text-[10px] lg:text-xs leading-5 text-gray-500 dark:text-gray-400'>
                     Spread duties fairly across available members instead of
                     repeatedly selecting the same people.
                   </p>
@@ -693,11 +693,11 @@ export default function RosterCreate() {
                 />
 
                 <div>
-                  <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                  <p className='text-xs lg:text-sm font-medium text-gray-900 dark:text-white'>
                     Rotate roles
                   </p>
 
-                  <p className='mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                  <p className='mt-1 text-[10px] lg:text-xs leading-5 text-gray-500 dark:text-gray-400'>
                     Rotate members between roles across roster assignments when
                     roles are enabled.
                   </p>

@@ -11,7 +11,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import Button from '../components/ui/button.jsx';
+import Button from '../components/ui/Button.jsx';
 import {
   getRosterEvents,
   getRosterTemplates,
@@ -263,7 +263,7 @@ function RosterEventEdit() {
           Back
         </Button>
 
-        <div className='rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500'>
+        <div className='rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-xs lg:text-sm text-red-500'>
           {error || 'Roster event not found.'}
         </div>
       </div>
@@ -285,26 +285,26 @@ function RosterEventEdit() {
 
         <h1 className='font-display text-2xl font-semibold'>Edit Program</h1>
 
-        <p className='mt-1 text-sm text-muted-foreground'>
+        <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
           Update the details for{' '}
           <span className='font-medium text-foreground'>{event.name}</span>.
         </p>
       </div>
 
       {error && (
-        <div className='rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500'>
+        <div className='rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-xs lg:text-sm text-red-500'>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className='space-y-6'>
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5'>
             <h2 className='font-display text-lg font-semibold'>
               Program Details
             </h2>
 
-            <p className='mt-1 text-sm text-muted-foreground'>
+            <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
               This program belongs to{' '}
               <span className='font-medium text-foreground'>
                 {template.name}
@@ -315,7 +315,7 @@ function RosterEventEdit() {
 
           <div className='space-y-5'>
             <div>
-              <label className='mb-2 block text-sm font-medium'>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
                 Program Name
               </label>
 
@@ -325,12 +325,12 @@ function RosterEventEdit() {
                 onChange={(inputEvent) =>
                   updateField('name', inputEvent.target.value)
                 }
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
             <div>
-              <label className='mb-2 block text-sm font-medium'>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
                 Description
               </label>
 
@@ -340,13 +340,13 @@ function RosterEventEdit() {
                   updateField('description', inputEvent.target.value)
                 }
                 rows={3}
-                className='w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full resize-none rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
               />
             </div>
           </div>
         </div>
 
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5 flex items-start gap-3'>
             <div className='rounded-lg bg-brand-500/10 p-2 text-brand-500'>
               <CalendarDays className='h-5 w-5' />
@@ -355,7 +355,7 @@ function RosterEventEdit() {
             <div>
               <h2 className='font-display text-lg font-semibold'>Schedule</h2>
 
-              <p className='mt-1 text-sm text-muted-foreground'>
+              <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
                 Change the dates or times for this program.
               </p>
             </div>
@@ -363,7 +363,7 @@ function RosterEventEdit() {
 
           <div className='grid gap-5 sm:grid-cols-2'>
             <div>
-              <label className='mb-2 block text-sm font-medium'>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
                 Start Date
               </label>
 
@@ -373,12 +373,14 @@ function RosterEventEdit() {
                 onChange={(inputEvent) =>
                   updateField('startDate', inputEvent.target.value)
                 }
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
             <div>
-              <label className='mb-2 block text-sm font-medium'>End Date</label>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
+                End Date
+              </label>
 
               <input
                 type='date'
@@ -387,12 +389,12 @@ function RosterEventEdit() {
                 onChange={(inputEvent) =>
                   updateField('endDate', inputEvent.target.value)
                 }
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
             <div>
-              <label className='mb-2 block text-sm font-medium'>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
                 Start Time
               </label>
 
@@ -405,13 +407,15 @@ function RosterEventEdit() {
                   onChange={(inputEvent) =>
                     updateField('startTime', inputEvent.target.value)
                   }
-                  className='w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand-500'
+                  className='w-full rounded-xl border border-brand bg-background py-3 pl-10 pr-4 text-xs lg:text-sm outline-none transition focus:border-brand-500'
                 />
               </div>
             </div>
 
             <div>
-              <label className='mb-2 block text-sm font-medium'>End Time</label>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
+                End Time
+              </label>
 
               <div className='relative'>
                 <Clock3 className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
@@ -423,14 +427,14 @@ function RosterEventEdit() {
                   onChange={(inputEvent) =>
                     updateField('endTime', inputEvent.target.value)
                   }
-                  className='w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-brand-500'
+                  className='w-full rounded-xl border border-brand bg-background py-3 pl-10 pr-4 text-xs lg:text-sm outline-none transition focus:border-brand-500'
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5 flex items-start gap-3'>
             <div className='rounded-lg bg-brand-500/10 p-2 text-brand-500'>
               <MapPin className='h-5 w-5' />
@@ -439,7 +443,7 @@ function RosterEventEdit() {
             <div>
               <h2 className='font-display text-lg font-semibold'>Location</h2>
 
-              <p className='mt-1 text-sm text-muted-foreground'>
+              <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
                 Update where this program will take place.
               </p>
             </div>
@@ -451,11 +455,11 @@ function RosterEventEdit() {
             onChange={(inputEvent) =>
               updateField('location', inputEvent.target.value)
             }
-            className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+            className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
           />
         </div>
 
-        <div className='rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6'>
+        <div className='rounded-2xl border border-brand bg-card p-5 shadow-sm sm:p-6'>
           <div className='mb-5 flex items-start gap-3'>
             <div className='rounded-lg bg-brand-500/10 p-2 text-brand-500'>
               <Users className='h-5 w-5' />
@@ -464,7 +468,7 @@ function RosterEventEdit() {
             <div>
               <h2 className='font-display text-lg font-semibold'>Staffing</h2>
 
-              <p className='mt-1 text-sm text-muted-foreground'>
+              <p className='mt-1 text-xs lg:text-sm text-muted-foreground'>
                 Change the number of members or program roles.
               </p>
             </div>
@@ -472,7 +476,7 @@ function RosterEventEdit() {
 
           <div className='space-y-5'>
             <div>
-              <label className='mb-2 block text-sm font-medium'>
+              <label className='mb-2 block text-xs lg:text-sm font-medium'>
                 Members Needed
               </label>
 
@@ -484,11 +488,11 @@ function RosterEventEdit() {
                 onChange={(inputEvent) =>
                   updateField('membersNeeded', inputEvent.target.value)
                 }
-                className='w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                className='w-full rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
               />
             </div>
 
-            <div className='rounded-xl border border-border bg-background/50 p-4'>
+            <div className='rounded-xl border border-brand bg-background/50 p-4'>
               <label className='flex cursor-pointer items-start gap-3'>
                 <input
                   type='checkbox'
@@ -500,11 +504,11 @@ function RosterEventEdit() {
                 />
 
                 <span>
-                  <span className='block text-sm font-medium'>
+                  <span className='block text-xs lg:text-sm font-medium'>
                     Enable roles
                   </span>
 
-                  <span className='mt-1 block text-xs text-muted-foreground'>
+                  <span className='mt-1 block text-[10px] lg:text-xs text-muted-foreground'>
                     Assign specific responsibilities to members during this
                     program.
                   </span>
@@ -516,9 +520,11 @@ function RosterEventEdit() {
               <div className='space-y-4'>
                 <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
                   <div>
-                    <h3 className='text-sm font-semibold'>Program Roles</h3>
+                    <h3 className='text-xs lg:text-sm font-semibold'>
+                      Program Roles
+                    </h3>
 
-                    <p className='mt-1 text-xs text-muted-foreground'>
+                    <p className='mt-1 text-[10px] lg:text-xs text-muted-foreground'>
                       Roles are assigned across the members needed for each
                       occurrence.
                     </p>
@@ -553,7 +559,7 @@ function RosterEventEdit() {
                           onChange={(inputEvent) =>
                             updateRole(index, inputEvent.target.value)
                           }
-                          className='flex-1 rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
+                          className='flex-1 rounded-xl border border-brand bg-background px-4 py-3 text-xs lg:text-sm outline-none transition focus:border-brand-500'
                         />
 
                         <Button
