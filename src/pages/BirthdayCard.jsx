@@ -196,7 +196,9 @@ export default function BirthdayCard() {
       {/* Header */}
       <div className='flex items-center gap-3'>
         <div>
-          <h1 className='text-2xl font-semibold text-white'>Birthday Cards</h1>
+          <h1 className='text-2xl font-semibold text-black dark:text-white'>
+            Birthday Cards
+          </h1>
 
           <p className='mt-1 text-sm text-gray-500'>
             Create a birthday card for a member.
@@ -208,9 +210,11 @@ export default function BirthdayCard() {
       {selectedMember && (
         <div className='grid gap-6 lg:grid-cols-[320px_1fr]'>
           {/* Controls */}
-          <div className='rounded-xl border border-gray-200 bg-gray-200 p-5'>
+          <div className='rounded-xl border border-gray-300 dark:border-zinc-800 p-5'>
             <div className='mb-5'>
-              <h2 className='font-semibold text-gray-900'>Card Settings</h2>
+              <h2 className='font-semibold text-black dark:text-white'>
+                Card Settings
+              </h2>
 
               <p className='mt-1 text-sm text-gray-500'>
                 Customize the birthday card.
@@ -226,13 +230,13 @@ export default function BirthdayCard() {
                   className='h-12 w-12 rounded-full object-cover'
                 />
               ) : (
-                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 font-semibold text-gray-600'>
+                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-white/50 dark:bg-gray-800 font-semibold text-black dark:text-white'>
                   {selectedMember.fullName?.charAt(0)?.toUpperCase()}
                 </div>
               )}
 
               <div>
-                <p className='font-medium text-gray-900'>
+                <p className='font-medium text-black dark:text-white'>
                   {selectedMember.fullName}
                 </p>
 
@@ -258,8 +262,8 @@ export default function BirthdayCard() {
                       onClick={() => setSelectedTemplate(template)}
                       className={`flex w-full items-center gap-3 rounded-xl border p-2 text-left transition ${
                         isSelected
-                          ? 'border-gray-900 bg-gray-50 ring-1 ring-gray-900'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          ? 'border-gray-300 dark:border-zinc-800 bg-gray-300 dark:bg-zinc-950 ring-1 ring-gray-300 dark:ring-zinc-800 text-black dark:text-white'
+                          : 'border-gray-300 dark:border-zinc-800 hover:border-gray-300 hover:bg-gray-300 dark:hover:bg-zinc-950 text-black dark:text-white hover:text-black dark:hover:text-white dark:hover:border-zinc-800'
                       }`}
                     >
                       {/* Template preview */}
@@ -271,9 +275,7 @@ export default function BirthdayCard() {
                       />
 
                       <div className='min-w-0 flex-1'>
-                        <p className='text-sm font-medium text-gray-900'>
-                          {template.name}
-                        </p>
+                        <p className='text-sm font-medium'>{template.name}</p>
 
                         <p className='mt-0.5 text-xs text-gray-500'>
                           Birthday design
@@ -301,7 +303,7 @@ export default function BirthdayCard() {
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 rows={5}
-                className='w-full resize-none rounded-lg border text-black border-gray-200 px-3 py-2 text-sm outline-none focus:border-gray-400'
+                className='w-full resize-none rounded-lg border text-black dark:text-white border-gray-300 dark:border-zinc-800 px-3 py-2 text-sm outline-none focus:border-gray-400'
                 placeholder='Write a birthday message...'
               />
             </div>
@@ -311,7 +313,7 @@ export default function BirthdayCard() {
               <button
                 type='button'
                 onClick={handleCloseEditor}
-                className='flex-1 rounded-lg border border-gray-200 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50'
+                className='flex-1 rounded-lg border border-gray-300 dark:border-zinc-800 px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-300 dark:hover:bg-gray-800'
               >
                 Cancel
               </button>
@@ -320,7 +322,7 @@ export default function BirthdayCard() {
                 type='button'
                 onClick={handleDownload}
                 disabled={isBusy}
-                className='flex flex-1 text-[10px] items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2 font-medium text-white transition hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-60'
+                className='flex flex-1 text-[10px] text-nowrap items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2 font-medium text-white transition hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-60'
               >
                 <Download size={16} />
 
@@ -336,12 +338,14 @@ export default function BirthdayCard() {
           </div>
 
           {/* Preview — single area, toggled between Photo and Video */}
-          <div className='rounded-xl border border-gray-200 bg-gray-300 p-5'>
+          <div className='rounded-xl border border-gray-300 bg-black/10 backdrop-blur-2xl dark:border-zinc-800 p-5'>
             <div className='mb-4 flex items-center justify-between'>
               <div>
-                <h2 className='font-semibold text-gray-900'>Preview</h2>
+                <h2 className='font-semibold text-black dark:text-white'>
+                  Preview
+                </h2>
 
-                <p className='mt-1 text-sm text-gray-500'>
+                <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
                   {previewMode === 'video'
                     ? 'This is how the animated video will look.'
                     : 'This is how the birthday card will look.'}
@@ -591,12 +595,12 @@ export default function BirthdayCard() {
           )}
 
           {!loading && !error && (
-            <div className='rounded-xl border border-gray-200 bg-white'>
-              <div className='border-b border-gray-200 p-5'>
+            <div className='rounded-xl border border-gray-300 dark:border-zinc-800'>
+              <div className='border-b border-gray-300 dark:border-zinc-800 p-5'>
                 <div className='flex items-center gap-2'>
-                  <Cake size={20} className='text-gray-700' />
+                  <Cake size={20} className='text-black dark:text-white' />
 
-                  <h2 className='font-semibold text-gray-900'>
+                  <h2 className='font-semibold text-black dark:text-white'>
                     This Month&apos;s Birthdays
                   </h2>
                 </div>
@@ -604,12 +608,12 @@ export default function BirthdayCard() {
 
               {birthdays.length === 0 ? (
                 <div className='p-8 text-center'>
-                  <p className='text-sm text-gray-500'>
+                  <p className='text-sm text-black dark:text-white'>
                     There are no birthdays this month.
                   </p>
                 </div>
               ) : (
-                <div className='divide-y divide-gray-100'>
+                <div className='divide-y divide-gray-300 dark:divide-gray-800'>
                   {birthdays.map((member) => {
                     const birthday = new Date(member.dateOfBirth);
 
@@ -632,11 +636,11 @@ export default function BirthdayCard() {
                           )}
 
                           <div>
-                            <p className='font-medium text-sm lg:text-lg text-gray-900'>
+                            <p className='font-medium text-sm lg:text-lg text-black dark:text-white'>
                               {member.fullName}
                             </p>
 
-                            <p className='text-[10px] lg:text-sm text-gray-500'>
+                            <p className='text-[10px] lg:text-sm text-gray-500 dark:text-gray-400'>
                               {birthday.toLocaleDateString('en-NG', {
                                 day: 'numeric',
                                 month: 'long',
@@ -652,7 +656,7 @@ export default function BirthdayCard() {
                         <button
                           type='button'
                           onClick={() => handleCreateCard(member)}
-                          className='rounded-lg bg-gray-900 text-nowrap px-4 py-2 text-[7px] lg:text-sm font-medium text-white transition hover:bg-gray-800'
+                          className='rounded-lg bg-brand-600 text-nowrap px-4 py-2 text-[7px] lg:text-sm font-medium text-white transition hover:bg-brand-700'
                         >
                           Create Card
                         </button>

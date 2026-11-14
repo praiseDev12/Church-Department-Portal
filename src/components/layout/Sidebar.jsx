@@ -147,7 +147,7 @@ export default function Sidebar({
 
           {/* Mobile sidebar */}
           <aside
-            className={`fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-zinc-200 bg-white p-4 shadow-xl transition-transform duration-300 md:hidden dark:border-zinc-800 dark:bg-zinc-900 ${
+            className={`fixed inset-y-0 left-0 z-99 flex w-60 flex-col border-r border-zinc-200 bg-white p-4 shadow-xl transition-transform duration-300 md:hidden dark:border-zinc-800 dark:bg-zinc-900 ${
               open ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
