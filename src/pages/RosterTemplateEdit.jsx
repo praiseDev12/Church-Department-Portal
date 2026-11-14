@@ -200,9 +200,9 @@ export default function RosterTemplateEdit() {
 
   const addDefaultRoles = (dutyIndex) => {
     const defaultRoles = [
+      'Program Coordinator',
       'Projection Operator',
-      'Slides Operator',
-      'Backup Operator',
+      'Sound Operator',
     ];
 
     setDuties((current) =>

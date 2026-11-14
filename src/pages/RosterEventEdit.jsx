@@ -19,9 +19,9 @@ import {
 } from '../services/rosterService.js';
 
 const defaultRoles = [
+  'Program Coordinator',
   'Projection Operator',
-  'Slides Operator',
-  'Backup Operator',
+  'Sound Operator',
 ];
 
 function RosterEventEdit() {

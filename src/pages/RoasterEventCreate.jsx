@@ -19,9 +19,9 @@ import {
 } from '../services/rosterService.js';
 
 const defaultRoles = [
+  'Program Coordinator',
   'Projection Operator',
-  'Slides Operator',
-  'Backup Operator',
+  'Sound Operator',
 ];
 
 const emptyRole = () => ({
@@ -528,7 +528,7 @@ function RosterEventCreate() {
                           onChange={(event) =>
                             updateRole(index, event.target.value)
                           }
-                          placeholder='e.g. Projection Operator'
+                          placeholder='e.g. Lead worker'
                           className='flex-1 rounded-xl border border-brand bg-background px-4 py-3 text-sm outline-none transition focus:border-brand-500'
                         />
 

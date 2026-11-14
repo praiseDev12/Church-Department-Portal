@@ -572,7 +572,7 @@ export default function RosterCreate() {
                                     event.target.value,
                                   )
                                 }
-                                placeholder='e.g. Projection Operator'
+                                placeholder='e.g. Lead worker'
                               />
                             </div>
 

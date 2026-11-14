@@ -1007,7 +1007,7 @@ export default function RosterMonthly() {
                   type='text'
                   value={roleName}
                   onChange={(event) => setRoleName(event.target.value)}
-                  placeholder='e.g. Projection Operator'
+                  placeholder='e.g. Lead worker'
                   disabled={actionLoading}
                   className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white'
                 />
