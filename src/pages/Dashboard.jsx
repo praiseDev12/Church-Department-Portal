@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { apiFetch } from '../lib/api.js';
 
 import { ArrowRight, Cake } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const statConfig = [
   { key: 'totalMembers', label: 'Total members' },
@@ -15,6 +15,7 @@ const statConfig = [
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [summary, setSummary] = useState(null);
   const [birthdays, setBirthdays] = useState([]);
@@ -196,9 +197,10 @@ export default function Dashboard() {
               const birthday = new Date(member.dateOfBirth);
 
               return (
-                <div
+                <Link
                   key={member._id}
-                  className='flex items-center gap-3 rounded-xl border border-zinc-200 p-3 dark:border-zinc-700'
+                  to='/birthdays/cards'
+                  className='flex hover:bg-brand/40 hover:cursor-pointer items-center gap-3 rounded-xl border border-zinc-200 p-3 dark:border-zinc-700'
                 >
                   {member.photoUrl ? (
                     <img
@@ -228,7 +230,7 @@ export default function Dashboard() {
                       {member.unit?.name || 'No unit'}
                     </p>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
