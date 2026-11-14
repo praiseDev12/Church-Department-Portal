@@ -34,6 +34,7 @@ import RosterEventCreate from './pages/RoasterEventCreate.jsx';
 import RosterEventEdit from './pages/RosterEventEdit.jsx';
 import RosterPublished from './pages/RosterPublished.jsx';
 import MyRoster from './pages/MyRoster.jsx';
+import BirthdayCard from './pages/BirthdayCard.jsx';
 
 // Checks for authentication and admin privileges
 function RequireAdmin({ children }) {
@@ -149,6 +150,7 @@ export default function App() {
           <Route path='/members' element={<Members />} />
           <Route path='/announcements' element={<Announcements />} />
           <Route path='/attendance' element={<AttendanceReport />} />
+          <Route path='/birthdays/cards' element={<BirthdayCard />} />
 
           <Route
             path='/roster/template/:templateId/event/:eventId/edit'

@@ -16,6 +16,7 @@ import {
   X,
   LogOut,
   CalendarRange,
+  Cake,
 } from 'lucide-react';
 
 import Sidebar from './Sidebar.jsx';
@@ -35,6 +36,11 @@ const moreNavItems = [
     to: '/admin-checkin',
     label: 'Setup Check In',
     icon: Settings,
+  },
+  {
+    to: '/birthdays/cards',
+    label: 'Birthday Cards',
+    icon: Cake,
   },
   {
     to: '/announcements',

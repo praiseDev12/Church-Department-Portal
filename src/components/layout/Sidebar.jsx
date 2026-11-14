@@ -7,6 +7,7 @@ import {
   LogOut,
   LayoutDashboard,
   Users,
+  Cake,
   ClipboardCheck,
   Settings,
   CalendarCheck,
@@ -43,6 +44,11 @@ const navItems = [
     to: '/members',
     label: 'Members',
     icon: Users,
+  },
+  {
+    to: '/birthdays/cards',
+    label: 'Birthday Cards',
+    icon: Cake,
   },
   {
     to: '/check-in',

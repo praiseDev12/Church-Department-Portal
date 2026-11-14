@@ -8,7 +8,7 @@ export default function Topbar({ onMenuClick, isInstalled }) {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className='flex items-center sticky top-0 z-10 justify-between bg-white/50 px-4 py-3 dark:bg-zinc-900/50 backdrop-blur-2xl sm:px-6'>
+    <header className='flex items-center sticky top-0 z-99 justify-between bg-white/50 px-4 py-3 dark:bg-zinc-900/50 backdrop-blur-2xl sm:px-6'>
       <div className='flex min-w-0 items-center gap-3'>
         {/* Sidebar toggle — mobile only. Lives in the header instead of
             floating independently over the page, so it reads as part

@@ -3,7 +3,7 @@ import Card from '../components/ui/Card.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { apiFetch } from '../lib/api.js';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Cake } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const statConfig = [
@@ -15,9 +15,15 @@ const statConfig = [
 
 export default function Dashboard() {
   const { user } = useAuth();
+
   const [summary, setSummary] = useState(null);
+  const [birthdays, setBirthdays] = useState([]);
+
   const [error, setError] = useState('');
+  const [birthdayError, setBirthdayError] = useState('');
+
   const [loading, setLoading] = useState(true);
+  const [birthdaysLoading, setBirthdaysLoading] = useState(true);
 
   const firstName = user?.fullName?.split(' ')[0] || 'User';
 
@@ -42,6 +48,31 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
+    apiFetch('/birthdays')
+      .then((data) => {
+        if (!cancelled) {
+          setBirthdays(data.birthdays || []);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setBirthdayError(
+            err.message || 'Could not load birthday information.',
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setBirthdaysLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     document.title = 'Dashboard';
   }, []);
 
@@ -51,6 +82,7 @@ export default function Dashboard() {
         <h1 className='font-display text-2xl font-semibold'>
           Welcome {firstName}
         </h1>
+
         <p className='text-sm text-zinc-500 dark:text-zinc-400'>
           Here's what's happening in your{' '}
           {user?.role === 'main_admin' ? 'department' : 'unit'}.
@@ -70,6 +102,7 @@ export default function Dashboard() {
               <p className='text-sm text-zinc-500 dark:text-zinc-400'>
                 {stat.label}
               </p>
+
               <p className='mt-2 font-display text-3xl font-semibold text-brand-500 dark:text-brand-300'>
                 {loading ? '…' : (value ?? 0)}
               </p>
@@ -113,6 +146,93 @@ export default function Dashboard() {
             </Link>
           )}
         </div>
+      </Card>
+
+      {/* Birthdays */}
+      <Card>
+        <div className='flex items-center justify-between gap-4'>
+          <div>
+            <div className='flex items-center gap-2'>
+              <Cake size={18} className='text-brand-500 dark:text-brand-300' />
+
+              <h2 className='font-display text-base font-semibold'>
+                Birthdays this month
+              </h2>
+            </div>
+
+            <p className='mt-1 text-xs text-zinc-500 dark:text-zinc-400'>
+              Celebrate members of your{' '}
+              {user?.role === 'main_admin' ? 'department' : 'unit'}.
+            </p>
+          </div>
+        </div>
+
+        {birthdayError && (
+          <p className='mt-4 text-sm text-red-600 dark:text-red-400'>
+            {birthdayError}
+          </p>
+        )}
+
+        {birthdaysLoading ? (
+          <div className='mt-5 text-sm text-zinc-500 dark:text-zinc-400'>
+            Loading birthdays...
+          </div>
+        ) : birthdays.length === 0 ? (
+          <div className='mt-5 rounded-xl border border-dashed border-zinc-200 px-4 py-8 text-center dark:border-zinc-700'>
+            <Cake
+              size={28}
+              className='mx-auto text-zinc-400 dark:text-zinc-500'
+            />
+
+            <p className='mt-3 text-sm font-medium'>No birthdays this month</p>
+
+            <p className='mt-1 text-xs text-zinc-500 dark:text-zinc-400'>
+              There are no birthdays to celebrate yet.
+            </p>
+          </div>
+        ) : (
+          <div className='mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'>
+            {birthdays.map((member) => {
+              const birthday = new Date(member.dateOfBirth);
+
+              return (
+                <div
+                  key={member._id}
+                  className='flex items-center gap-3 rounded-xl border border-zinc-200 p-3 dark:border-zinc-700'
+                >
+                  {member.photoUrl ? (
+                    <img
+                      src={member.photoUrl}
+                      alt={member.fullName}
+                      className='h-12 w-12 shrink-0 rounded-full object-cover'
+                    />
+                  ) : (
+                    <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300'>
+                      {member.fullName?.charAt(0)?.toUpperCase() || '?'}
+                    </div>
+                  )}
+
+                  <div className='min-w-0'>
+                    <p className='truncate text-sm font-semibold'>
+                      {member.fullName}
+                    </p>
+
+                    <p className='mt-0.5 text-xs text-zinc-500 dark:text-zinc-400'>
+                      {birthday.toLocaleDateString('en-NG', {
+                        day: 'numeric',
+                        month: 'long',
+                      })}
+                    </p>
+
+                    <p className='mt-0.5 truncate text-xs text-zinc-500 dark:text-zinc-400'>
+                      {member.unit?.name || 'No unit'}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Card>
     </div>
   );
