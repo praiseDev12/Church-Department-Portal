@@ -632,11 +632,11 @@ export default function BirthdayCard() {
                           )}
 
                           <div>
-                            <p className='font-medium text-gray-900'>
+                            <p className='font-medium text-sm lg:text-lg text-gray-900'>
                               {member.fullName}
                             </p>
 
-                            <p className='text-sm text-gray-500'>
+                            <p className='text-[10px] lg:text-sm text-gray-500'>
                               {birthday.toLocaleDateString('en-NG', {
                                 day: 'numeric',
                                 month: 'long',
@@ -652,7 +652,7 @@ export default function BirthdayCard() {
                         <button
                           type='button'
                           onClick={() => handleCreateCard(member)}
-                          className='rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800'
+                          className='rounded-lg bg-gray-900 text-nowrap px-4 py-2 text-[7px] lg:text-sm font-medium text-white transition hover:bg-gray-800'
                         >
                           Create Card
                         </button>
