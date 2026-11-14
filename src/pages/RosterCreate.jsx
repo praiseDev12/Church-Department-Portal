@@ -26,9 +26,9 @@ const DAYS = [
 ];
 
 const DEFAULT_ROLES = [
+  'Program Coordinator',
   'Projection Operator',
-  'Slides Operator',
-  'Backup Operator',
+  'Sound Operator',
 ];
 
 const createEmptyDuty = () => ({
