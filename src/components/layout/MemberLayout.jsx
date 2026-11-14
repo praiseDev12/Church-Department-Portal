@@ -23,6 +23,7 @@ import {
   CalendarCheck,
   UserCircle,
   Bell,
+  ClipboardList,
 } from 'lucide-react';
 
 import BrandLockup from '../ui/BrandLockup.jsx';
@@ -33,6 +34,11 @@ const navItems = [
     label: 'Home',
     end: true,
     icon: Home,
+  },
+  {
+    to: '/portal/roster',
+    label: 'My Roster',
+    icon: ClipboardList,
   },
   {
     to: '/check-in',

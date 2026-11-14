@@ -33,6 +33,7 @@ import RosterTemplateEdit from './pages/RosterTemplateEdit.jsx';
 import RosterEventCreate from './pages/RoasterEventCreate.jsx';
 import RosterEventEdit from './pages/RosterEventEdit.jsx';
 import RosterPublished from './pages/RosterPublished.jsx';
+import MyRoster from './pages/MyRoster.jsx';
 
 // Checks for authentication and admin privileges
 function RequireAdmin({ children }) {
@@ -121,6 +122,7 @@ export default function App() {
             element={<MemberAnnouncements />}
           />
           <Route path='/profile' element={<ProfileSettings />} />
+          <Route path='/portal/roster' element={<MyRoster />} />
         </Route>
 
         {/* Shared Check-In route */}
