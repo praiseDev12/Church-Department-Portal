@@ -15,6 +15,7 @@ import {
   Building2,
   X,
   LogOut,
+  CalendarRange,
 } from 'lucide-react';
 
 import Sidebar from './Sidebar.jsx';
@@ -44,6 +45,11 @@ const moreNavItems = [
     to: '/contributions',
     label: 'Contributions',
     icon: HandCoins,
+  },
+  {
+    to: '/roster',
+    label: 'Roster',
+    icon: CalendarRange,
   },
   {
     to: '/reports',
